@@ -1,468 +1,440 @@
 /**
- * 发现页面 - 主入口文件  
- * 实现三维内容发现体系：关注/热门/同城
+ * 发现页面主组件
+ * 整合Tab切换、瀑布流列表、用户交互等功能
  */
 
-import React, { useState, useCallback, useEffect, useRef } from 'react';
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import {
   View,
   StyleSheet,
-  Platform,
-  Alert,
-  Dimensions,
+  SafeAreaView,
+  StatusBar,
   TouchableOpacity,
-  Text
+  Text,
+  Alert,
 } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
-// 组件导入
-import FilterTabs from './FilterTabs';
-import MasonryLayout from './MasonryLayout';
-import ContentCard from './ContentCard';
-import BottomNavigation from './BottomNavigation';
-
-// 类型和常量导入
-import {
-  TabType,
-  ContentItem,
+import { TabBar } from './components/TabBar';
+import { WaterfallList } from './components/WaterfallList';
+import { 
+  DiscoverScreenProps, 
+  TabType, 
+  ContentItem, 
   DiscoverState,
-  UserInfo,
-  LocationInfo,
-  ContentType
+  ApiResponse,
+  ContentListResponse,
+  LikeResponse,
 } from './types';
-import {
-  COLORS,
-  SPACING,
-  TAB_CONFIG,
-  PAGINATION,
+import { 
+  COLORS, 
+  LAYOUT_CONSTANTS, 
+  TABS, 
+  TEST_IDS,
   ERROR_MESSAGES,
-  Z_INDEX
 } from './constants';
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+// 模拟API调用（实际项目中应该使用真实的API）
+const mockApiCall = <T,>(data: T, delay = 1000): Promise<ApiResponse<T>> => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({
+        code: 200,
+        message: 'success',
+        data,
+        success: true,
+      });
+    }, delay);
+  });
+};
 
-// 拍摄按钮组件
-const CameraButton: React.FC<{ onPress: () => void }> = ({ onPress }) => (
-  <View style={styles.cameraButtonContainer}>
-    <TouchableOpacity 
-      style={styles.cameraButton}
-      onPress={onPress}
-      activeOpacity={0.8}
-    >
-      <Text style={styles.cameraIcon}>📷</Text>
-    </TouchableOpacity>
-  </View>
-);
-
-const DiscoverScreen: React.FC = () => {
-  const safeAreaInsets = useSafeAreaInsets();
+// 模拟内容数据
+const generateMockContent = (page = 1, tabType: TabType): ContentItem[] => {
+  const baseItems: ContentItem[] = Array.from({ length: 20 }, (_, index) => {
+    const id = `${tabType}_${page}_${index}`;
+    const imageIndex = (page - 1) * 20 + index + 1;
+    
+    return {
+      id,
+      type: Math.random() > 0.8 ? 'video' : 'image',
+      imageUrl: `https://picsum.photos/400/${300 + Math.floor(Math.random() * 200)}?random=${imageIndex}`,
+      title: `请你们看雪 ${tabType} ${imageIndex}`,
+      description: '这是一个测试描述内容，用于展示卡片布局效果。',
+      user: {
+        id: `user_${imageIndex}`,
+        nickname: `用户名称${imageIndex}`,
+        avatar: `https://picsum.photos/100/100?random=${imageIndex + 1000}`,
+        isFollowing: Math.random() > 0.7,
+        verified: Math.random() > 0.8,
+      },
+      likeCount: Math.floor(Math.random() * 1000),
+      commentCount: Math.floor(Math.random() * 100),
+      shareCount: Math.floor(Math.random() * 50),
+      isLiked: Math.random() > 0.8,
+      isCollected: Math.random() > 0.9,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      width: 400,
+      height: 300 + Math.floor(Math.random() * 200),
+    };
+  });
   
+  return baseItems;
+};
+
+export const DiscoverScreen: React.FC<DiscoverScreenProps> = ({ navigation }) => {
   // 状态管理
   const [state, setState] = useState<DiscoverState>({
-    activeTab: TabType.FOLLOWING,
-    
-    followingData: [],
-    trendingData: [],
-    nearbyData: [],
-    
-    followingLoading: false,
-    trendingLoading: false,
-    nearbyLoading: false,
-    
-    followingRefreshing: false,
-    trendingRefreshing: false,
-    nearbyRefreshing: false,
-    
-    followingError: null,
-    trendingError: null,
-    nearbyError: null,
-    
-    followingPage: 1,
-    trendingPage: 1,
-    nearbyPage: 1,
-    
-    followingHasMore: true,
-    trendingHasMore: true,
-    nearbyHasMore: true,
-    
-    userLocation: null,
-    locationPermission: 'undetermined'
+    currentTab: 'hot',
+    content: {
+      follow: [],
+      hot: [],
+      local: [],
+    },
+    loading: {
+      follow: false,
+      hot: false,
+      local: false,
+    },
+    refreshing: {
+      follow: false,
+      hot: false,
+      local: false,
+    },
+    hasMore: {
+      follow: true,
+      hot: true,
+      local: true,
+    },
+    error: null,
+    lastRefreshTime: {
+      follow: 0,
+      hot: 0,
+      local: 0,
+    },
   });
 
-  // 引用
-  const abortControllerRef = useRef<AbortController>();
-  const mountedRef = useRef(true);
+  // 页面计数器
+  const [pages, setPages] = useState<Record<TabType, number>>({
+    follow: 1,
+    hot: 1,
+    local: 1,
+  });
 
-  // 生成模拟数据
-  const generateMockData = useCallback((type: TabType, page: number): ContentItem[] => {
-    const items: ContentItem[] = [];
-    const baseIndex = (page - 1) * PAGINATION.PAGE_SIZE;
-    
-    for (let i = 0; i < PAGINATION.PAGE_SIZE; i++) {
-      const index = baseIndex + i;
-      const contentTypes = [ContentType.IMAGE, ContentType.VIDEO, ContentType.TEXT];
-      const randomType = contentTypes[Math.floor(Math.random() * contentTypes.length)];
-      
-      const item: ContentItem = {
-        id: `${type}-${index}`,
-        type: randomType,
-        user: {
-          id: `user-${index}`,
-          avatar: `https://picsum.photos/100/100?random=${index}`,
-          nickname: `用户${index + 1}`,
-          isVerified: Math.random() > 0.7,
-          isFollowed: type === TabType.FOLLOWING ? true : Math.random() > 0.8,
-          isOnline: Math.random() > 0.6
-        },
-        content: Math.random() > 0.3 ? `这是一段内容描述 ${index + 1}。今天天气真不错，出来看看风景。#美好生活# #随手拍#` : undefined,
-        media: randomType === ContentType.TEXT ? undefined : [{
-          id: `media-${index}`,
-          url: randomType === ContentType.VIDEO 
-            ? `https://picsum.photos/400/300?random=${index}`
-            : `https://picsum.photos/${200 + (index % 3) * 50}/${150 + (index % 4) * 40}?random=${index}`,
-          width: 400,
-          height: randomType === ContentType.VIDEO ? 300 : 200 + (index % 5) * 100,
-          thumbnailUrl: `https://picsum.photos/400/300?random=${index}`,
-          duration: randomType === ContentType.VIDEO ? 60 + (index % 5) * 30 : undefined
-        }],
-        tags: Math.random() > 0.6 ? ['生活', '美食', '旅行'][Math.floor(Math.random() * 3)] ? [`${['生活', '美食', '旅行'][Math.floor(Math.random() * 3)]}`] : undefined : undefined,
-        location: type === TabType.NEARBY ? {
-          id: `location-${index}`,
-          name: `${['南山区', '福田区', '罗湖区'][index % 3]}·${['科技园', '市民中心', '东门'][index % 3]}`,
-          distance: `${(Math.random() * 5).toFixed(1)}km`
-        } : undefined,
-        createdAt: new Date(Date.now() - Math.random() * 86400000 * 7).toISOString(),
-        updatedAt: new Date().toISOString(),
-        
-        likeCount: Math.floor(Math.random() * 1000),
-        commentCount: Math.floor(Math.random() * 100),
-        shareCount: Math.floor(Math.random() * 50),
-        isLiked: Math.random() > 0.7,
-        
-        hotScore: type === TabType.TRENDING ? Math.floor(Math.random() * 5000) + 1000 : undefined,
-        trendingReason: type === TabType.TRENDING ? ['因为你关注了相关用户', '热门话题', '同城热门'][Math.floor(Math.random() * 3)] : undefined,
-        
-        isNearby: type === TabType.NEARBY,
-        distanceFromUser: type === TabType.NEARBY ? `${(Math.random() * 10).toFixed(1)}km` : undefined
+  // 当前Tab的内容数据
+  const currentContent = useMemo(() => {
+    return state.content[state.currentTab];
+  }, [state.content, state.currentTab]);
+
+  // 当前Tab的加载状态
+  const currentLoading = useMemo(() => {
+    return state.loading[state.currentTab];
+  }, [state.loading, state.currentTab]);
+
+  // 当前Tab的刷新状态
+  const currentRefreshing = useMemo(() => {
+    return state.refreshing[state.currentTab];
+  }, [state.refreshing, state.currentTab]);
+
+  // 当前Tab是否还有更多数据
+  const currentHasMore = useMemo(() => {
+    return state.hasMore[state.currentTab];
+  }, [state.hasMore, state.currentTab]);
+
+  // 加载内容数据
+  const loadContent = useCallback(async (tabType: TabType, page = 1, isRefresh = false) => {
+    try {
+      // 更新加载状态
+      setState(prev => ({
+        ...prev,
+        loading: { ...prev.loading, [tabType]: !isRefresh },
+        refreshing: { ...prev.refreshing, [tabType]: isRefresh },
+        error: null,
+      }));
+
+      // 模拟API调用
+      const mockData: ContentListResponse = {
+        list: generateMockContent(page, tabType),
+        hasMore: page < 5, // 模拟5页数据
+        nextCursor: `page_${page + 1}`,
+        total: 100,
       };
-      
-      items.push(item);
+
+      const response = await mockApiCall(mockData, 800);
+
+      if (response.success) {
+        setState(prev => ({
+          ...prev,
+          content: {
+            ...prev.content,
+            [tabType]: isRefresh ? response.data.list : [...prev.content[tabType], ...response.data.list],
+          },
+          hasMore: { ...prev.hasMore, [tabType]: response.data.hasMore },
+          lastRefreshTime: { ...prev.lastRefreshTime, [tabType]: Date.now() },
+        }));
+
+        // 更新页面计数
+        if (!isRefresh) {
+          setPages(prev => ({ ...prev, [tabType]: page + 1 }));
+        } else {
+          setPages(prev => ({ ...prev, [tabType]: 2 }));
+        }
+      }
+    } catch (error) {
+      console.error('加载内容失败:', error);
+      setState(prev => ({ ...prev, error: ERROR_MESSAGES.NETWORK_ERROR }));
+    } finally {
+      setState(prev => ({
+        ...prev,
+        loading: { ...prev.loading, [tabType]: false },
+        refreshing: { ...prev.refreshing, [tabType]: false },
+      }));
     }
-    
-    return items;
   }, []);
 
-  // 模拟网络请求
-  const mockFetch = useCallback(async (type: TabType, page: number): Promise<{ data: ContentItem[], hasMore: boolean }> => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const data = generateMockData(type, page);
-        const hasMore = page < 5; // 最多5页数据
-        resolve({ data, hasMore });
-      }, 800 + Math.random() * 1200); // 随机延迟
-    });
-  }, [generateMockData]);
+  // 初始化数据
+  useEffect(() => {
+    loadContent('hot', 1, true);
+  }, [loadContent]);
 
-  // 获取内容数据
-  const fetchContent = useCallback(async (type: TabType, page: number = 1, isRefresh: boolean = false) => {
-    if (!mountedRef.current) return;
-
-    // 取消之前的请求
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort();
-    }
-    abortControllerRef.current = new AbortController();
-
-    const stateKey = `${type}Loading` as keyof DiscoverState;
-    const refreshKey = `${type}Refreshing` as keyof DiscoverState;
-    const errorKey = `${type}Error` as keyof DiscoverState;
-    const dataKey = `${type}Data` as keyof DiscoverState;
-    const hasMoreKey = `${type}HasMore` as keyof DiscoverState;
-    const pageKey = `${type}Page` as keyof DiscoverState;
-
-    try {
-      setState(prev => ({
-        ...prev,
-        [isRefresh ? refreshKey : stateKey]: true,
-        [errorKey]: null
-      }));
-
-      const result = await mockFetch(type, page);
-
-      if (!mountedRef.current) return;
-
-      setState(prev => ({
-        ...prev,
-        [dataKey]: isRefresh || page === 1 ? result.data : [...(prev[dataKey] as ContentItem[]), ...result.data],
-        [hasMoreKey]: result.hasMore,
-        [pageKey]: page,
-        [isRefresh ? refreshKey : stateKey]: false,
-        [errorKey]: null
-      }));
-
-    } catch (error) {
-      if (!mountedRef.current) return;
-      
-      setState(prev => ({
-        ...prev,
-        [isRefresh ? refreshKey : stateKey]: false,
-        [errorKey]: error instanceof Error ? error.message : ERROR_MESSAGES.LOAD_FAILED
-      }));
-    }
-  }, [mockFetch]);
-
-  // 处理标签页切换
-  const handleTabChange = useCallback((tab: TabType) => {
-    setState(prev => ({ ...prev, activeTab: tab }));
+  // 处理Tab切换
+  const handleTabPress = useCallback((tabType: TabType) => {
+    setState(prev => ({ ...prev, currentTab: tabType }));
     
-    // 如果该标签页还没有数据，则加载
-    const dataKey = `${tab}Data` as keyof DiscoverState;
-    if ((state[dataKey] as ContentItem[]).length === 0) {
-      fetchContent(tab, 1);
+    // 如果该Tab没有数据，则加载
+    if (state.content[tabType].length === 0) {
+      loadContent(tabType, 1, true);
     }
-  }, [state, fetchContent]);
+  }, [state.content, loadContent]);
 
   // 处理下拉刷新
   const handleRefresh = useCallback(() => {
-    fetchContent(state.activeTab, 1, true);
-  }, [state.activeTab, fetchContent]);
+    loadContent(state.currentTab, 1, true);
+  }, [state.currentTab, loadContent]);
 
-  // 处理上拉加载更多
-  const handleEndReached = useCallback(() => {
-    const loadingKey = `${state.activeTab}Loading` as keyof DiscoverState;
-    const hasMoreKey = `${state.activeTab}HasMore` as keyof DiscoverState;
-    const pageKey = `${state.activeTab}Page` as keyof DiscoverState;
-    
-    if (state[loadingKey] || !state[hasMoreKey]) return;
-    
-    const nextPage = (state[pageKey] as number) + 1;
-    fetchContent(state.activeTab, nextPage);
-  }, [state, fetchContent]);
+  // 处理加载更多
+  const handleLoadMore = useCallback(() => {
+    if (currentHasMore && !currentLoading) {
+      loadContent(state.currentTab, pages[state.currentTab]);
+    }
+  }, [currentHasMore, currentLoading, state.currentTab, pages, loadContent]);
 
   // 处理内容卡片点击
-  const handleContentPress = useCallback((item: ContentItem) => {
-    Alert.alert('内容详情', `查看 ${item.user.nickname} 的内容详情`);
+  const handleItemPress = useCallback((item: ContentItem) => {
+    console.log('点击内容:', item.id);
+    // navigation.navigate('ContentDetail', { contentId: item.id });
   }, []);
 
   // 处理点赞
-  const handleLike = useCallback((item: ContentItem) => {
-    const dataKey = `${state.activeTab}Data` as keyof DiscoverState;
-    const currentData = state[dataKey] as ContentItem[];
-    
-    setState(prev => ({
-      ...prev,
-      [dataKey]: currentData.map(content => 
-        content.id === item.id 
-          ? {
-              ...content,
-              isLiked: !content.isLiked,
-              likeCount: content.isLiked ? content.likeCount - 1 : content.likeCount + 1
-            }
-          : content
-      )
-    }));
-  }, [state.activeTab]);
+  const handleLike = useCallback(async (itemId: string) => {
+    try {
+      const item = currentContent.find(item => item.id === itemId);
+      if (!item) return;
 
-  // 处理评论
-  const handleComment = useCallback((item: ContentItem) => {
-    Alert.alert('评论', `评论 ${item.user.nickname} 的内容`);
+      // 乐观更新UI
+      setState(prev => ({
+        ...prev,
+        content: {
+          ...prev.content,
+          [state.currentTab]: prev.content[state.currentTab].map(contentItem =>
+            contentItem.id === itemId
+              ? {
+                  ...contentItem,
+                  isLiked: !contentItem.isLiked,
+                  likeCount: contentItem.isLiked 
+                    ? contentItem.likeCount - 1 
+                    : contentItem.likeCount + 1,
+                }
+              : contentItem
+          ),
+        },
+      }));
+
+      // 模拟API调用
+      const mockResponse: LikeResponse = {
+        isLiked: !item.isLiked,
+        likeCount: item.isLiked ? item.likeCount - 1 : item.likeCount + 1,
+      };
+
+      await mockApiCall(mockResponse, 300);
+      
+      // 这里可以显示成功提示
+      // Toast.show(item.isLiked ? SUCCESS_MESSAGES.UNLIKE_SUCCESS : SUCCESS_MESSAGES.LIKE_SUCCESS);
+      
+    } catch (error) {
+      console.error('点赞失败:', error);
+      // 回滚UI状态
+      setState(prev => ({
+        ...prev,
+        content: {
+          ...prev.content,
+          [state.currentTab]: prev.content[state.currentTab].map(contentItem =>
+            contentItem.id === itemId
+              ? {
+                  ...contentItem,
+                  isLiked: !contentItem.isLiked,
+                  likeCount: contentItem.isLiked 
+                    ? contentItem.likeCount + 1 
+                    : contentItem.likeCount - 1,
+                }
+              : contentItem
+          ),
+        },
+      }));
+      Alert.alert('提示', ERROR_MESSAGES.LIKE_ERROR);
+    }
+  }, [currentContent, state.currentTab]);
+
+  // 处理收藏
+  const handleCollect = useCallback(async (itemId: string) => {
+    try {
+      const item = currentContent.find(item => item.id === itemId);
+      if (!item) return;
+
+      // 乐观更新UI
+      setState(prev => ({
+        ...prev,
+        content: {
+          ...prev.content,
+          [state.currentTab]: prev.content[state.currentTab].map(contentItem =>
+            contentItem.id === itemId
+              ? { ...contentItem, isCollected: !contentItem.isCollected }
+              : contentItem
+          ),
+        },
+      }));
+
+      // 模拟API调用
+      await mockApiCall({ success: true }, 300);
+      
+    } catch (error) {
+      console.error('收藏失败:', error);
+      // 回滚UI状态
+      setState(prev => ({
+        ...prev,
+        content: {
+          ...prev.content,
+          [state.currentTab]: prev.content[state.currentTab].map(contentItem =>
+            contentItem.id === itemId
+              ? { ...contentItem, isCollected: !contentItem.isCollected }
+              : contentItem
+          ),
+        },
+      }));
+    }
+  }, [currentContent, state.currentTab]);
+
+  // 处理用户头像点击
+  const handleUserPress = useCallback((userId: string) => {
+    console.log('点击用户:', userId);
+    // navigation.navigate('UserProfile', { userId });
   }, []);
 
   // 处理分享
   const handleShare = useCallback((item: ContentItem) => {
-    Alert.alert('分享', `分享 ${item.user.nickname} 的内容`);
+    console.log('分享内容:', item.id);
+    Alert.alert('分享', `分享内容: ${item.title}`);
   }, []);
 
-  // 处理用户点击
-  const handleUserPress = useCallback((user: UserInfo) => {
-    Alert.alert('用户详情', `查看 ${user.nickname} 的详情页面`);
-  }, []);
-
-  // 处理位置点击
-  const handleLocationPress = useCallback((location: LocationInfo) => {
-    Alert.alert('位置详情', `查看位置：${location.name}`);
-  }, []);
-
-  // 处理更多操作
-  const handleMore = useCallback((item: ContentItem) => {
-    Alert.alert('更多操作', '举报、不感兴趣、屏蔽用户', [
-      { text: '取消', style: 'cancel' },
-      { text: '举报', style: 'destructive' },
-      { text: '不感兴趣' },
-      { text: '屏蔽用户', style: 'destructive' }
-    ]);
-  }, []);
-
-  // 处理拍摄按钮点击
-  const handleCameraPress = useCallback(() => {
-    Alert.alert('发布内容', '选择发布类型', [
-      { text: '取消', style: 'cancel' },
-      { text: '拍照', onPress: () => Alert.alert('拍照', '打开相机拍照') },
-      { text: '录视频', onPress: () => Alert.alert('录视频', '打开相机录视频') },
-      { text: '从相册选择', onPress: () => Alert.alert('相册', '从相册选择图片/视频') }
-    ]);
-  }, []);
-
-  // 处理底部导航切换
-  const handleBottomTabPress = useCallback((tabId: string) => {
-    Alert.alert('导航', `切换到 ${tabId} 页面`);
-  }, []);
-
-  // 渲染内容项
-  const renderContentItem = useCallback((item: ContentItem, index: number) => (
-    <ContentCard
-      key={item.id}
-      item={item}
-      onPress={handleContentPress}
-      onLike={handleLike}
-      onComment={handleComment}
-      onShare={handleShare}
-      onUserPress={handleUserPress}
-      onLocationPress={handleLocationPress}
-      onMore={handleMore}
-    />
-  ), [
-    handleContentPress,
-    handleLike,
-    handleComment,
-    handleShare,
-    handleUserPress,
-    handleLocationPress,
-    handleMore
-  ]);
-
-  // 获取当前标签页数据
-  const getCurrentTabData = useCallback(() => {
-    const dataKey = `${state.activeTab}Data` as keyof DiscoverState;
-    return state[dataKey] as ContentItem[];
-  }, [state]);
-
-  const getCurrentTabLoading = useCallback(() => {
-    const loadingKey = `${state.activeTab}Loading` as keyof DiscoverState;
-    return state[loadingKey] as boolean;
-  }, [state]);
-
-  const getCurrentTabRefreshing = useCallback(() => {
-    const refreshingKey = `${state.activeTab}Refreshing` as keyof DiscoverState;
-    return state[refreshingKey] as boolean;
-  }, [state]);
-
-  const getCurrentTabError = useCallback(() => {
-    const errorKey = `${state.activeTab}Error` as keyof DiscoverState;
-    return state[errorKey] as string | null;
-  }, [state]);
-
-  // 初始化数据加载
-  useEffect(() => {
-    fetchContent(TabType.FOLLOWING, 1);
-    return () => {
-      mountedRef.current = false;
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
-      }
-    };
+  // 处理购物车点击
+  const handleCartPress = useCallback(() => {
+    console.log('点击购物车');
+    // navigation.navigate('Cart');
   }, []);
 
   return (
-    <View style={styles.container}>
-      {/* 状态栏配置已移至MainScreen统一管理 */}
-
-      {/* 顶部安全区域 */}
-      <View style={[styles.safeArea, { height: safeAreaInsets.top }]} />
-
-      {/* 页面头部导航 */}
+    <SafeAreaView style={styles.container} testID={TEST_IDS.DISCOVER_SCREEN}>
+      <StatusBar barStyle="dark-content" backgroundColor={COLORS.BACKGROUND} />
+      
+      {/* 顶部导航栏 */}
       <View style={styles.header}>
-        <FilterTabs
-          activeTab={state.activeTab}
-          onTabChange={handleTabChange}
-          tabs={TAB_CONFIG}
+        {/* Tab栏 */}
+        <TabBar
+          tabs={TABS}
+          activeTab={state.currentTab}
+          onTabPress={handleTabPress}
         />
         
-        {/* 拍摄按钮 */}
-        <CameraButton onPress={handleCameraPress} />
+        {/* 购物车图标 */}
+        <TouchableOpacity
+          style={styles.cartButton}
+          onPress={handleCartPress}
+          testID={TEST_IDS.CART_ICON}
+        >
+          <Text style={styles.cartIcon}>🛒</Text>
+          <View style={styles.cartBadge}>
+            <Text style={styles.cartBadgeText}>0</Text>
+          </View>
+        </TouchableOpacity>
       </View>
 
       {/* 主内容区域 */}
       <View style={styles.content}>
-        <MasonryLayout
-          data={getCurrentTabData()}
-          renderItem={renderContentItem}
-          onEndReached={handleEndReached}
+        <WaterfallList
+          data={currentContent}
+          loading={currentLoading}
+          refreshing={currentRefreshing}
+          hasMore={currentHasMore}
           onRefresh={handleRefresh}
-          refreshing={getCurrentTabRefreshing()}
-          loading={getCurrentTabLoading()}
-          error={getCurrentTabError()}
-          emptyText={
-            state.activeTab === TabType.FOLLOWING ? ERROR_MESSAGES.EMPTY_FOLLOWING :
-            state.activeTab === TabType.TRENDING ? ERROR_MESSAGES.EMPTY_TRENDING :
-            ERROR_MESSAGES.EMPTY_NEARBY
-          }
+          onLoadMore={handleLoadMore}
+          onItemPress={handleItemPress}
+          onLike={handleLike}
+          onCollect={handleCollect}
+          onUserPress={handleUserPress}
+          onShare={handleShare}
+          navigation={navigation}
         />
       </View>
-
-      {/* 底部导航 */}
-      <BottomNavigation
-        activeTab="discover"
-        onTabPress={handleBottomTabPress}
-      />
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.WHITE
+    backgroundColor: COLORS.BACKGROUND,
   },
-
-  safeArea: {
-    backgroundColor: COLORS.WHITE
-  },
-
+  
   header: {
+    backgroundColor: COLORS.BACKGROUND,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.BORDER_LIGHT,
     position: 'relative',
-    backgroundColor: COLORS.WHITE,
-    zIndex: Z_INDEX.HEADER
   },
-
-  // 拍摄按钮容器
-  cameraButtonContainer: {
+  
+  cartButton: {
     position: 'absolute',
-    top: 8,
-    right: SPACING.LG,
-    zIndex: Z_INDEX.HEADER + 1
-  },
-
-  cameraButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: COLORS.WHITE,
-    borderWidth: 1,
-    borderColor: COLORS.BORDER,
+    top: LAYOUT_CONSTANTS.MARGIN_SMALL,
+    right: LAYOUT_CONSTANTS.PADDING_HORIZONTAL,
+    width: 44,
+    height: 44,
     justifyContent: 'center',
     alignItems: 'center',
-    ...Platform.select({
-      ios: {
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 8
-      },
-      android: {
-        elevation: 4
-      }
-    })
   },
-
-  cameraIcon: {
-    fontSize: 20,
-    color: COLORS.PRIMARY
+  
+  cartIcon: {
+    fontSize: LAYOUT_CONSTANTS.ICON_SIZE_LARGE,
+    color: COLORS.TEXT_PRIMARY,
   },
-
+  
+  cartBadge: {
+    position: 'absolute',
+    top: 2,
+    right: 2,
+    backgroundColor: COLORS.ERROR,
+    borderRadius: 8,
+    minWidth: 16,
+    height: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 4,
+  },
+  
+  cartBadgeText: {
+    fontSize: 10,
+    color: COLORS.BACKGROUND,
+    fontWeight: 'bold',
+  },
+  
   content: {
     flex: 1,
-    backgroundColor: COLORS.BACKGROUND
-  }
+  },
 });
-
-export default DiscoverScreen;

@@ -17,8 +17,9 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 // 导入页面组件
-import HomeScreen from './HomeScreen';
+import { HomeScreen } from './home';
 import { DiscoverScreen } from './discover';
+import { GroupCenterScreen } from './group-center';
 import { NavigationProp, RouteProp } from '../types/navigation';
 
 const { width: screenWidth } = Dimensions.get('window');
@@ -28,7 +29,7 @@ interface DemoScreenProps {
   route: RouteProp;
 }
 
-type PageType = 'demo' | 'home' | 'discover';
+type PageType = 'demo' | 'home' | 'discover' | 'group-center';
 
 const DemoScreen: React.FC<DemoScreenProps> = ({ navigation, route }) => {
   const [currentPage, setCurrentPage] = useState<PageType>('demo');
@@ -59,6 +60,19 @@ const DemoScreen: React.FC<DemoScreenProps> = ({ navigation, route }) => {
         '多媒体内容卡片',
         '社交互动功能',
         '地理位置服务'
+      ]
+    },
+    {
+      id: 'group-center' as PageType,
+      title: '🎯 组局中心',
+      description: '完整社交组局业务闭环\n发布/筛选/报名/支付流程',
+      status: '✅ 已完成',
+      features: [
+        '组局发布系统',
+        '智能筛选浏览',
+        '详情展示页面',
+        '报名支付流程',
+        '状态管理系统'
       ]
     }
   ];
@@ -137,6 +151,8 @@ const DemoScreen: React.FC<DemoScreenProps> = ({ navigation, route }) => {
         return <HomeScreen navigation={navigation} route={route} />;
       case 'discover':
         return <DiscoverScreen />;
+      case 'group-center':
+        return <GroupCenterScreen navigation={navigation} route={route} />;
       default:
         return renderDemoPage();
     }

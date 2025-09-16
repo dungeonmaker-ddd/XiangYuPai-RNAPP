@@ -620,7 +620,7 @@ FeatureScreen.tsx (≈1000 lines)
 │   ├─ 合并手势和动画效果（例如，只保留重要的滑动动画、加载动画）
 │   └─ 优化动画组件，减少不必要的渲染和性能损耗
 │
-├─ 11. Error Boundaries & Logging (30–50)
+├─ 11. Error Boundaries & Logging (30–50)[chatgpt-export_RN模块结构设计 (6).md](../../../../../Downloads/chatgpt-export_RN%E6%A8%A1%E5%9D%97%E7%BB%93%E6%9E%84%E8%AE%BE%E8%AE%A1%20%286%29.md)
 │   ├─ 精简错误边界组件
 │   ├─ 删除不常用的日志记录和错误处理流程
 │   └─ 统一错误处理机制，仅保留核心的错误捕获和日志
@@ -1046,6 +1046,7 @@ FeatureScreen.tsx (≈100 lines)
 1000-3000行的代码里可能有多个前端页面模块
 这时我们如果能拆分成100-300行会好管理非常多（允许600的2-3联合模块）
 但是我们不希望使用共享的工具或者样式或者等等辅助文件
+能放到子模块的逻辑就放到子模块，需要两个子模块联调的机制和逻辑就在父模块里实现
 
 我们可能期望的是：
 按功能域拆分 (Domain-based) - 我们采用的 
@@ -1057,20 +1058,34 @@ FeatureScreen.tsx (≈100 lines)
 │  HomeScreen.tsx
 └─home
         BottomNavigation.tsx
-        constants.ts
         FilterTabs.tsx
         FunctionGrid.tsx
         GameBanner.tsx
         HeaderSection.tsx
-        index.ts
         LimitedOffers.tsx
         TeamPartySection.tsx
-        types.ts
         UserCard.tsx
+### 📂 标准目录结构
 
+```
+src/screens/
+├── [module-name]/              # 模块文件夹
+│   ├── [ModuleName]Screen.tsx  # 主页面组件
+│   ├── components/             # 子组件目录
+│   │   ├── Component1.tsx      # 子组件文件
+│   │   ├── Component2.tsx      
+│   │   ├── ...
+│   └── README.md               # 模块说明文档
+├── MainScreen.tsx              # 全局主屏幕
+├── DemoScreen.tsx              # 演示页面
+└── index.ts                    # 总导出索引
+```
 拒绝共享库：≤30 行的通用函数，允许每个模块各拷一份（Duplication over wrong abstraction）。
 
 强隔离：任何“方便”的跨模块引用都禁止（宁可少量重复）。
 
 YAGNI：只写当前场景用得到的代码；多态/策略/缓存/重试等先不写，真需要再补
 
+能放到子模块的逻辑就放到子模块
+
+我们对任何编写的文件都采取3000行代码的严谨性，要求8段式的编码逻辑

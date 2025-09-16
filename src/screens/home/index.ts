@@ -1,12 +1,12 @@
-// UI 模块统一导出
-export { HeaderSection } from './HeaderSection';
-export { GameBanner } from './GameBanner';
-export { FunctionGrid } from './FunctionGrid';
-export { LimitedOffers } from './LimitedOffers';
-export { TeamPartySection } from './TeamPartySection';
-export { FilterTabs } from './FilterTabs';
-export { UserCard } from './UserCard';
-export { BottomNavigation } from './BottomNavigation';
+/**
+ * Home模块统一导出
+ */
+
+// 主页面组件
+export { default as HomeScreen } from './HomeScreen';
+
+// UI 组件导出
+export * from './components';
 
 // 类型和常量导出
 export type { UserCard as UserCardType, FunctionItem, LocationInfo } from './types';

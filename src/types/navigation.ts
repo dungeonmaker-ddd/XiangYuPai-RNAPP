@@ -22,13 +22,34 @@ export interface ScreenProps {
   route: RouteProp;
 }
 
+// 导入地区选择相关类型
+import type { RegionInfo, CurrentLocationInfo } from '../screens/location/types';
+// 导入消息相关类型
+import type { User } from '../screens/message/types';
+// 导入发现页面相关类型
+import type { ContentItem } from '../screens/discover/types';
+
 // 路由参数类型定义
 export type RootStackParamList = {
-  Home: undefined;
+  Main: undefined;
+  LocationSelector: {
+    currentLocation?: CurrentLocationInfo;
+    onLocationSelected?: (location: RegionInfo) => void;
+  };
+  Search: undefined; // 搜索页面
   UserDetail: { userId: string };
   FunctionDetail: { functionId: string };
-  LocationSelector: { currentLocation?: any; onLocationSelect?: (location: any) => void };
   TeamCenter: undefined;
+  GroupCenter: undefined; // 组局中心页面
+  PublishGroup: undefined; // 组局发布页面
+  PrivateChatScreen: { // 私聊对话页面
+    userId: string;
+    userInfo: User;
+  };
+  DiscoverDetail: { // 发现详情页面
+    contentId: string;
+    contentItem?: ContentItem;
+  };
   LimitedOffers: undefined;
   SearchResult: { query: string };
 };

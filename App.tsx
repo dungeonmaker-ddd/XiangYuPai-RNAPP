@@ -8,13 +8,13 @@
 import React from 'react';
 import { StatusBar } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import MainScreen from './src/screens/MainScreen';
+import { AppNavigator } from './src/navigation';
 
 function App() {
   return (
     <SafeAreaProvider>
       <StatusBar barStyle="light-content" backgroundColor="#8B5CF6" translucent />
-      <MainScreen />
+      <AppNavigator />
     </SafeAreaProvider>
   );
 }

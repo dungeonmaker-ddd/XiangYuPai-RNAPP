@@ -1,230 +1,166 @@
 /**
- * 发现页面 - 类型定义
- * 定义发现页面相关的所有类型接口
+ * 发现页面模块类型定义
+ * 包含所有接口、类型和枚举定义
  */
 
 // 内容类型枚举
-export enum ContentType {
-  IMAGE = 'image',
-  VIDEO = 'video',
-  TEXT = 'text',
-  ACTIVITY = 'activity'
+export type ContentType = 'image' | 'video' | 'live';
+
+// Tab类型枚举
+export type TabType = 'follow' | 'hot' | 'local';
+
+// 地理位置信息
+export interface LocationInfo {
+  latitude: number;
+  longitude: number;
+  address: string;
+  distance?: number;
 }
 
-// 标签页类型
-export enum TabType {
-  FOLLOWING = 'following',
-  TRENDING = 'trending', 
-  NEARBY = 'nearby'
-}
-
-// 用户信息接口
+// 用户信息
 export interface UserInfo {
   id: string;
-  avatar: string;
   nickname: string;
-  isVerified: boolean;
-  isFollowed: boolean;
-  isOnline?: boolean;
+  avatar: string;
+  isFollowing: boolean;
+  verified?: boolean;
+  level?: number;
 }
 
-// 位置信息接口
-export interface LocationInfo {
-  id: string;
-  name: string;
-  distance?: string;
-  coordinates?: {
-    latitude: number;
-    longitude: number;
-  };
-}
-
-// 媒体文件接口
-export interface MediaFile {
-  id: string;
-  url: string;
-  width: number;
-  height: number;
-  thumbnailUrl?: string;
-  duration?: number; // 视频时长(秒)
-}
-
-// 内容项接口
+// 内容项
 export interface ContentItem {
   id: string;
   type: ContentType;
+  imageUrl: string;
+  videoUrl?: string;
+  title: string;
+  description?: string;
   user: UserInfo;
-  content?: string; // 文字内容
-  media?: MediaFile[]; // 媒体文件
-  tags?: string[]; // 话题标签
-  mentions?: string[]; // @用户
-  location?: LocationInfo; // 位置信息
-  createdAt: string;
-  updatedAt: string;
-  
-  // 互动数据
   likeCount: number;
-  commentCount: number; 
+  commentCount: number;
   shareCount: number;
   isLiked: boolean;
-  
-  // 热门相关
-  hotScore?: number; // 热度值
-  trendingReason?: string; // 推荐理由
-  
-  // 同城相关
-  isNearby?: boolean;
-  distanceFromUser?: string;
+  isCollected: boolean;
+  createdAt: string;
+  updatedAt: string;
+  location?: LocationInfo;
+  tags?: string[];
+  width: number;
+  height: number;
 }
 
-// 活动内容接口
-export interface ActivityContent extends ContentItem {
-  type: ContentType.ACTIVITY;
+// Tab配置
+export interface TabConfig {
+  key: TabType;
   title: string;
-  description: string;
-  startTime: string;
-  endTime: string;
-  participantCount: number;
-  maxParticipants?: number;
-  fee?: string;
-  organizer: UserInfo;
+  icon?: string;
+}
+
+// 发现页面Props
+export interface DiscoverScreenProps {
+  navigation: any;
+  route?: any;
 }
 
 // 内容卡片Props
 export interface ContentCardProps {
   item: ContentItem;
-  onPress?: (item: ContentItem) => void;
-  onLike?: (item: ContentItem) => void;
-  onComment?: (item: ContentItem) => void;
-  onShare?: (item: ContentItem) => void;
-  onUserPress?: (user: UserInfo) => void;
-  onLocationPress?: (location: LocationInfo) => void;
-  onMore?: (item: ContentItem) => void;
+  index: number;
+  onPress: (item: ContentItem) => void;
+  onLike: (itemId: string) => void;
+  onCollect: (itemId: string) => void;
+  onUserPress: (userId: string) => void;
+  onShare: (item: ContentItem) => void;
 }
 
-// 瀑布流布局Props
-export interface MasonryLayoutProps {
-  data: ContentItem[];
-  renderItem: (item: ContentItem, index: number) => React.ReactNode;
-  onEndReached?: () => void;
-  onRefresh?: () => void;
-  refreshing?: boolean;
-  loading?: boolean;
-  error?: string | null;
-  emptyText?: string;
-  numColumns?: number;
-  columnGap?: number;
-  contentPadding?: number;
-}
-
-// 标签页Props
-export interface FilterTabsProps {
+// Tab栏Props
+export interface TabBarProps {
+  tabs: TabConfig[];
   activeTab: TabType;
-  onTabChange: (tab: TabType) => void;
-  tabs: Array<{
-    key: TabType;
-    title: string;
-    badge?: number;
-  }>;
+  onTabPress: (tab: TabType) => void;
 }
 
-// 发现页面状态接口
-export interface DiscoverState {
-  // 当前标签页
-  activeTab: TabType;
-  
-  // 内容数据
-  followingData: ContentItem[];
-  trendingData: ContentItem[];
-  nearbyData: ContentItem[];
-  
-  // 加载状态
-  followingLoading: boolean;
-  trendingLoading: boolean;
-  nearbyLoading: boolean;
-  
-  // 刷新状态
-  followingRefreshing: boolean;
-  trendingRefreshing: boolean;
-  nearbyRefreshing: boolean;
-  
-  // 错误状态
-  followingError: string | null;
-  trendingError: string | null;
-  nearbyError: string | null;
-  
-  // 分页信息
-  followingPage: number;
-  trendingPage: number;
-  nearbyPage: number;
-  
-  // 是否还有更多数据
-  followingHasMore: boolean;
-  trendingHasMore: boolean;
-  nearbyHasMore: boolean;
-  
-  // 用户位置信息
-  userLocation: LocationInfo | null;
-  locationPermission: 'granted' | 'denied' | 'undetermined';
-}
-
-// 网络请求参数
-export interface FetchContentParams {
-  page: number;
-  pageSize: number;
-  type: TabType;
-  location?: {
-    latitude: number;
-    longitude: number;
-  };
-}
-
-// API响应接口
-export interface ContentResponse {
+// 瀑布流列表Props
+export interface WaterfallListProps {
   data: ContentItem[];
-  total: number;
-  page: number;
+  loading: boolean;
+  refreshing: boolean;
   hasMore: boolean;
+  onRefresh: () => void;
+  onLoadMore: () => void;
+  onItemPress: (item: ContentItem) => void;
+  onLike: (itemId: string) => void;
+  onCollect: (itemId: string) => void;
+  onUserPress: (userId: string) => void;
+  onShare: (item: ContentItem) => void;
+  // 导航和事件处理
+  navigation?: any;
+  analytics?: any;
+  showToast?: (message: string) => void;
 }
 
-// 点赞请求参数
-export interface LikeParams {
-  contentId: string;
-  isLike: boolean;
+// API响应类型
+export interface ApiResponse<T> {
+  code: number;
+  message: string;
+  data: T;
+  success: boolean;
 }
 
-// 评论请求参数  
-export interface CommentParams {
-  contentId: string;
-  content: string;
-  replyToId?: string;
+// 内容列表响应
+export interface ContentListResponse {
+  list: ContentItem[];
+  hasMore: boolean;
+  nextCursor?: string;
+  total: number;
 }
 
-// 分享请求参数
-export interface ShareParams {
-  contentId: string;
-  platform: 'wechat' | 'qq' | 'weibo' | 'copy' | 'system';
+// 点赞响应
+export interface LikeResponse {
+  isLiked: boolean;
+  likeCount: number;
 }
 
-// 关注请求参数
-export interface FollowParams {
-  userId: string;
-  isFollow: boolean;
+// 关注响应
+export interface FollowResponse {
+  isFollowing: boolean;
+  followerCount: number;
 }
 
-// 举报请求参数
-export interface ReportParams {
-  contentId: string;
-  reason: string;
-  description?: string;
+// 错误类型
+export interface AppError {
+  code: string;
+  message: string;
+  details?: any;
 }
 
-// 地理位置权限状态
-export type LocationPermissionStatus = 'granted' | 'denied' | 'undetermined';
-
-// 内容筛选参数
-export interface ContentFilterParams {
-  distance?: 'nearby' | 'sameDistrict' | 'sameCity' | 'all';
-  time?: 'realtime' | 'today' | 'thisWeek' | 'all';
-  contentType?: 'all' | 'posts' | 'activities' | 'help';
+// 状态类型
+export interface DiscoverState {
+  currentTab: TabType;
+  content: {
+    follow: ContentItem[];
+    hot: ContentItem[];
+    local: ContentItem[];
+  };
+  loading: {
+    follow: boolean;
+    hot: boolean;
+    local: boolean;
+  };
+  refreshing: {
+    follow: boolean;
+    hot: boolean;
+    local: boolean;
+  };
+  hasMore: {
+    follow: boolean;
+    hot: boolean;
+    local: boolean;
+  };
+  error: string | null;
+  lastRefreshTime: {
+    follow: number;
+    hot: number;
+    local: number;
+  };
 }

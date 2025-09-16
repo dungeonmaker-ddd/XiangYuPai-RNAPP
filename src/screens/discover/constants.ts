@@ -1,332 +1,307 @@
 /**
- * 发现页面 - 常量定义
- * 定义发现页面相关的常量配置
+ * 发现页面模块常量配置
+ * 包含API端点、布局常量、颜色主题等
  */
 
-import { TabType } from './types';
+import { TabConfig } from './types';
 
-// API 端点配置
+// API端点配置
 export const API_ENDPOINTS = {
-  FOLLOWING: '/api/discover/following',
-  TRENDING: '/api/discover/trending', 
-  NEARBY: '/api/discover/nearby',
-  LIKE: '/api/content/like',
-  COMMENT: '/api/content/comment',
-  SHARE: '/api/content/share',
-  FOLLOW: '/api/user/follow',
-  REPORT: '/api/content/report',
-  LOCATION: '/api/location/update'
+  // 内容相关
+  DISCOVER_HOT: '/api/discover/hot',
+  DISCOVER_FOLLOW: '/api/discover/follow', 
+  DISCOVER_LOCAL: '/api/discover/local',
+  CONTENT_DETAIL: '/api/content/detail',
+  
+  // 用户交互
+  LIKE_CONTENT: '/api/content/like',
+  COLLECT_CONTENT: '/api/content/collect',
+  FOLLOW_USER: '/api/user/follow',
+  SHARE_CONTENT: '/api/content/share',
+  
+  // 用户相关
+  USER_PROFILE: '/api/user/profile',
+  USER_CONTENT: '/api/user/content',
 } as const;
 
-// 分页配置
-export const PAGINATION = {
-  PAGE_SIZE: 20,
-  INITIAL_PAGE: 1,
-  PRELOAD_THRESHOLD: 2 // 距离底部2屏高度时开始预加载
+// 布局常量
+export const LAYOUT_CONSTANTS = {
+  // 卡片相关
+  CARD_MARGIN: 8,
+  CARD_RADIUS: 12,
+  CARD_SHADOW_OFFSET: { width: 0, height: 2 },
+  CARD_SHADOW_OPACITY: 0.1,
+  CARD_SHADOW_RADIUS: 4,
+  
+  // 列数配置
+  COLUMN_COUNT: 2,
+  COLUMN_GAP: 8,
+  
+  // 头像相关
+  AVATAR_SIZE_SMALL: 24,
+  AVATAR_SIZE_MEDIUM: 36,
+  AVATAR_SIZE_LARGE: 48,
+  
+  // 图标尺寸
+  ICON_SIZE_SMALL: 16,
+  ICON_SIZE_MEDIUM: 20,
+  ICON_SIZE_LARGE: 24,
+  
+  // 间距
+  PADDING_HORIZONTAL: 16,
+  PADDING_VERTICAL: 12,
+  MARGIN_SMALL: 4,
+  MARGIN_MEDIUM: 8,
+  MARGIN_LARGE: 16,
+  
+  // 高度
+  HEADER_HEIGHT: 56,
+  TAB_BAR_HEIGHT: 48,
+  BOTTOM_NAV_HEIGHT: 80,
+  
+  // 加载更多阈值
+  LOAD_MORE_THRESHOLD: 0.7,
 } as const;
 
-// 标签页配置
-export const TAB_CONFIG = [
+// 颜色主题
+export const COLORS = {
+  // 主色调
+  PRIMARY: '#8A2BE2',
+  PRIMARY_LIGHT: '#9370DB',
+  PRIMARY_DARK: '#7B68EE',
+  
+  // 文字颜色
+  TEXT_PRIMARY: '#000000',
+  TEXT_SECONDARY: '#666666',
+  TEXT_TERTIARY: '#999999',
+  TEXT_PLACEHOLDER: '#CCCCCC',
+  
+  // 背景颜色
+  BACKGROUND: '#F8F8F8',
+  BACKGROUND_GRAY: '#F5F5F5',
+  CARD_BACKGROUND: '#FFFFFF',
+  
+  // 边框颜色
+  BORDER: '#EEEEEE',
+  BORDER_LIGHT: '#F0F0F0',
+  SEPARATOR: '#E5E5E5',
+  
+  // 状态颜色
+  SUCCESS: '#4CAF50',
+  WARNING: '#FF9800',
+  ERROR: '#F44336',
+  INFO: '#2196F3',
+  
+  // 交互颜色
+  LIKE: '#FF3B30',
+  LIKE_ACTIVE: '#FF1744',
+  COLLECT: '#FF9800',
+  COLLECT_ACTIVE: '#FF8F00',
+  SHARE: '#2196F3',
+  
+  // 透明色
+  TRANSPARENT: 'transparent',
+  OVERLAY: 'rgba(0, 0, 0, 0.3)',
+  SHADOW: 'rgba(0, 0, 0, 0.1)',
+} as const;
+
+// 字体样式
+export const TYPOGRAPHY = {
+  // 标题
+  TITLE_LARGE: {
+    fontSize: 20,
+    fontWeight: 'bold' as const,
+    lineHeight: 28,
+    color: COLORS.TEXT_PRIMARY,
+  },
+  TITLE_MEDIUM: {
+    fontSize: 18,
+    fontWeight: 'bold' as const,
+    lineHeight: 24,
+    color: COLORS.TEXT_PRIMARY,
+  },
+  TITLE_SMALL: {
+    fontSize: 16,
+    fontWeight: 'bold' as const,
+    lineHeight: 22,
+    color: COLORS.TEXT_PRIMARY,
+  },
+  
+  // 正文
+  BODY_LARGE: {
+    fontSize: 16,
+    fontWeight: 'normal' as const,
+    lineHeight: 22,
+    color: COLORS.TEXT_PRIMARY,
+  },
+  BODY_MEDIUM: {
+    fontSize: 14,
+    fontWeight: 'normal' as const,
+    lineHeight: 20,
+    color: COLORS.TEXT_PRIMARY,
+  },
+  BODY_SMALL: {
+    fontSize: 12,
+    fontWeight: 'normal' as const,
+    lineHeight: 16,
+    color: COLORS.TEXT_SECONDARY,
+  },
+  
+  // 标签
+  CAPTION: {
+    fontSize: 12,
+    fontWeight: 'normal' as const,
+    lineHeight: 16,
+    color: COLORS.TEXT_TERTIARY,
+  },
+  
+  // 按钮
+  BUTTON_TEXT: {
+    fontSize: 16,
+    fontWeight: '500' as const,
+    lineHeight: 22,
+  },
+} as const;
+
+// Tab配置
+export const TABS: TabConfig[] = [
   {
-    key: TabType.FOLLOWING,
+    key: 'follow',
     title: '关注',
-    icon: null,
-    badge: 0
   },
   {
-    key: TabType.TRENDING, 
+    key: 'hot', 
     title: '热门',
-    icon: '🔥', // 可选的热门图标
-    badge: 0
   },
   {
-    key: TabType.NEARBY,
-    title: '同城', 
-    icon: '📍', // 可选的位置图标
-    badge: 0
-  }
-] as const;
-
-// 瀑布流布局配置
-export const MASONRY_CONFIG = {
-  NUM_COLUMNS: 2, // 固定双列
-  COLUMN_GAP: 8, // 列间距8px
-  CONTENT_PADDING: 16, // 容器左右边距16px
-  MIN_COLUMN_WIDTH: 160, // 最小列宽
-  MAX_COLUMN_WIDTH: 240, // 最大列宽
-  CARD_VERTICAL_GAP: 0, // 卡片垂直间距(使用分割线)
-  TOP_SAFE_DISTANCE: 16, // 顶部安全距离
-  BOTTOM_SAFE_DISTANCE: 16 // 底部安全距离
-} as const;
-
-// 内容卡片配置
-export const CARD_CONFIG = {
-  // 用户信息区域
-  USER_INFO_HEIGHT: 56,
-  AVATAR_SIZE: 40,
-  AVATAR_BORDER_RADIUS: 20,
-  
-  // 内容区域
-  TEXT_LINE_HEIGHT: 20,
-  MAX_TEXT_LINES: 3,
-  TEXT_FONT_SIZE: 16,
-  
-  // 图片区域
-  IMAGE_BORDER_RADIUS: 8,
-  MAX_IMAGE_HEIGHT: 400,
-  MIN_IMAGE_HEIGHT: 100,
-  DEFAULT_IMAGE_HEIGHT: 200,
-  
-  // 视频区域
-  VIDEO_ASPECT_RATIO: 16 / 9,
-  VIDEO_BORDER_RADIUS: 8,
-  
-  // 互动操作栏
-  ACTION_BAR_HEIGHT: 48,
-  ACTION_BUTTON_SIZE: 44,
-  ACTION_ICON_SIZE: 20,
-  
-  // 内边距
-  CARD_PADDING: 12,
-  CONTENT_SPACING: 8
-} as const;
+    key: 'local',
+    title: '同城',
+  },
+];
 
 // 动画配置
 export const ANIMATION_CONFIG = {
-  // 标签切换动画
+  // 持续时间
+  DURATION_SHORT: 200,
+  DURATION_MEDIUM: 300,
+  DURATION_LONG: 500,
+  
+  // 缓动函数
+  EASING_IN: 'ease-in',
+  EASING_OUT: 'ease-out',
+  EASING_IN_OUT: 'ease-in-out',
+  
+  // Tab切换动画
   TAB_SWITCH_DURATION: 300,
-  TAB_INDICATOR_DURATION: 300,
-  
-  // 内容切换动画  
-  CONTENT_FADE_DURATION: 200,
-  CONTENT_SLIDE_DURATION: 300,
-  
-  // 卡片动画
-  CARD_ENTER_DURATION: 300,
-  CARD_PRESS_DURATION: 100,
   
   // 点赞动画
-  LIKE_ANIMATION_DURATION: 300,
-  LIKE_SCALE_FACTOR: 1.2,
+  LIKE_ANIMATION_DURATION: 200,
+  LIKE_SCALE_START: 1,
+  LIKE_SCALE_END: 1.2,
   
-  // 加载动画
-  LOADING_DURATION: 1500,
-  SKELETON_DURATION: 1500,
+  // 下拉刷新
+  REFRESH_DURATION: 1000,
   
-  // 刷新动画
-  REFRESH_TRIGGER_DISTANCE: 80,
-  REFRESH_ANIMATION_DURATION: 400
+  // 加载更多
+  LOAD_MORE_DURATION: 500,
 } as const;
 
-// 颜色配置 [[memory:8830196]]
-export const COLORS = {
-  // 主色调 - 紫色渐变
-  PRIMARY: '#8B5CF6',
-  PRIMARY_LIGHT: '#A78BFA', 
-  PRIMARY_DARK: '#7C3AED',
-  PRIMARY_GRADIENT: ['rgba(115, 127, 225, 1)', 'rgba(175, 56, 217, 1)'],
+// 请求配置
+export const REQUEST_CONFIG = {
+  // 超时时间
+  TIMEOUT: 10000,
   
-  // 中性色
-  BLACK: '#1F2937',
-  GRAY_900: '#111827',
-  GRAY_800: '#1F2937', 
-  GRAY_700: '#374151',
-  GRAY_600: '#4B5563',
-  GRAY_500: '#6B7280',
-  GRAY_400: '#9CA3AF',
-  GRAY_300: '#D1D5DB',
-  GRAY_200: '#E5E7EB',
-  GRAY_100: '#F3F4F6',
-  GRAY_50: '#F9FAFB',
-  WHITE: '#FFFFFF',
+  // 重试次数
+  RETRY_COUNT: 3,
   
-  // 功能色
-  SUCCESS: '#10B981',
-  WARNING: '#F59E0B', 
-  ERROR: '#EF4444',
-  INFO: '#3B82F6',
+  // 分页大小
+  PAGE_SIZE: 20,
   
-  // 社交互动色
-  LIKE_COLOR: '#EF4444', // 红色点赞
-  COMMENT_COLOR: '#6B7280', // 灰色评论
-  SHARE_COLOR: '#6B7280', // 灰色分享
+  // 缓存时间（毫秒）
+  CACHE_TIME: 5 * 60 * 1000, // 5分钟
   
-  // 标签状态色
-  TAB_ACTIVE: '#1F2937',
-  TAB_INACTIVE: '#6B7280',
-  TAB_INDICATOR: '#8B5CF6',
-  
-  // 背景色
-  BACKGROUND: '#FFFFFF',
-  CARD_BACKGROUND: '#FFFFFF',
-  MODAL_BACKGROUND: 'rgba(0, 0, 0, 0.5)',
-  
-  // 边框色
-  BORDER: '#E5E7EB',
-  SEPARATOR: '#F3F4F6'
+  // 刷新间隔
+  REFRESH_INTERVAL: 30 * 1000, // 30秒
 } as const;
 
-// 字体配置
-export const FONTS = {
-  // 字体族
-  FAMILY: 'PingFang SC',
-  FAMILY_FALLBACK: ['Helvetica', 'Arial', 'sans-serif'],
+// 图片配置
+export const IMAGE_CONFIG = {
+  // 质量
+  QUALITY_HIGH: 0.9,
+  QUALITY_MEDIUM: 0.7,
+  QUALITY_LOW: 0.5,
   
-  // 字号
-  SIZE_10: 10,
-  SIZE_12: 12, 
-  SIZE_14: 14,
-  SIZE_16: 16,
-  SIZE_18: 18,
-  SIZE_20: 20,
+  // 压缩尺寸
+  THUMBNAIL_SIZE: 300,
+  MEDIUM_SIZE: 600,
+  LARGE_SIZE: 1200,
   
-  // 字重
-  WEIGHT_REGULAR: '400' as const,
-  WEIGHT_MEDIUM: '500' as const,
-  WEIGHT_BOLD: '600' as const,
-  
-  // 行高
-  LINE_HEIGHT_1_2: 1.2,
-  LINE_HEIGHT_1_4: 1.4, 
-  LINE_HEIGHT_1_6: 1.6
-} as const;
-
-// 间距配置
-export const SPACING = {
-  XS: 4,
-  SM: 8,
-  MD: 12,
-  LG: 16,
-  XL: 20,
-  XXL: 24,
-  XXXL: 32
-} as const;
-
-// 圆角配置
-export const BORDER_RADIUS = {
-  SM: 4,
-  MD: 8,
-  LG: 12,
-  XL: 16,
-  ROUND: 50
-} as const;
-
-// 阴影配置
-export const SHADOWS = {
-  SMALL: {
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 2
+  // 瀑布流图片尺寸限制
+  WATERFALL: {
+    // 最小宽度 (px)
+    MIN_WIDTH: 200,
+    // 最大宽度 (px) 
+    MAX_WIDTH: 800,
+    // 最小高度 (px)
+    MIN_HEIGHT: 150,
+    // 最大高度 (px)
+    MAX_HEIGHT: 1200,
+    // 默认宽高比 (当原图比例异常时使用)
+    DEFAULT_ASPECT_RATIO: 3 / 4,
+    // 最小宽高比
+    MIN_ASPECT_RATIO: 1 / 3,
+    // 最大宽高比
+    MAX_ASPECT_RATIO: 3 / 1,
+    // 内容区域固定高度 (用户信息、标题等)
+    CONTENT_HEIGHT: 52, // 精确计算：padding(8) + title(18) + userRow(26) = 52px
   },
-  MEDIUM: {
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4
-  },
-  LARGE: {
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.15,
-    shadowRadius: 16,
-    elevation: 8
-  }
+  
+  // 占位图
+  PLACEHOLDER_AVATAR: require('../../../assets/images/common/default-avatar.png'),
+  PLACEHOLDER_IMAGE: require('../../../assets/images/common/default-avatar.png'), // 暂时使用default-avatar作为placeholder
+  
+  // 缓存配置
+  CACHE_CONTROL: 'force-cache',
+  PRIORITY_NORMAL: 'normal',
+  PRIORITY_HIGH: 'high',
 } as const;
 
-// z-index层级
-export const Z_INDEX = {
-  MODAL: 1000,
-  OVERLAY: 900,
-  POPUP: 800,
-  DROPDOWN: 700,
-  HEADER: 100,
-  CONTENT: 1
-} as const;
-
-// 测试ID
-export const TEST_IDS = {
-  // 主容器
-  DISCOVER_SCREEN: 'discover-screen',
-  
-  // 导航标签
-  TAB_FOLLOWING: 'tab-following',
-  TAB_TRENDING: 'tab-trending', 
-  TAB_NEARBY: 'tab-nearby',
-  
-  // 内容区域
-  CONTENT_LIST: 'content-list',
-  CONTENT_CARD: 'content-card',
-  
-  // 用户信息
-  USER_AVATAR: 'user-avatar',
-  USER_NICKNAME: 'user-nickname',
-  
-  // 互动按钮
-  LIKE_BUTTON: 'like-button',
-  COMMENT_BUTTON: 'comment-button',
-  SHARE_BUTTON: 'share-button',
-  MORE_BUTTON: 'more-button',
-  
-  // 拍摄按钮
-  CAMERA_BUTTON: 'camera-button',
-  
-  // 加载状态
-  LOADING_INDICATOR: 'loading-indicator',
-  REFRESH_CONTROL: 'refresh-control',
-  
-  // 空状态
-  EMPTY_STATE: 'empty-state',
-  ERROR_STATE: 'error-state'
-} as const;
-
-// 无障碍标签
-export const ACCESSIBILITY_LABELS = {
-  TAB_FOLLOWING: '关注标签页',
-  TAB_TRENDING: '热门标签页',
-  TAB_NEARBY: '同城标签页',
-  
-  LIKE_BUTTON: '点赞',
-  LIKED_BUTTON: '已点赞',
-  COMMENT_BUTTON: '评论',
-  SHARE_BUTTON: '分享',
-  MORE_BUTTON: '更多操作',
-  
-  CAMERA_BUTTON: '拍摄发布内容',
-  
-  USER_AVATAR: '用户头像',
-  CONTENT_IMAGE: '内容图片',
-  CONTENT_VIDEO: '内容视频',
-  
-  REFRESH_CONTENT: '下拉刷新内容',
-  LOAD_MORE: '加载更多内容'
-} as const;
-
-// 错误信息
+// 错误消息
 export const ERROR_MESSAGES = {
   NETWORK_ERROR: '网络连接失败，请检查网络设置',
-  LOAD_FAILED: '内容加载失败，请重试',
-  LOCATION_DENIED: '位置权限被拒绝，无法获取同城内容',
-  LOCATION_UNAVAILABLE: '位置服务不可用',
-  NO_MORE_DATA: '已经到底了~',
-  EMPTY_FOLLOWING: '暂无关注用户动态\n快去关注一些有趣的人吧',
-  EMPTY_TRENDING: '暂无热门内容',
-  EMPTY_NEARBY: '附近暂无动态\n换个地方试试吧'
+  SERVER_ERROR: '服务器异常，请稍后重试',
+  DATA_ERROR: '数据格式错误',
+  PERMISSION_ERROR: '权限不足',
+  NOT_FOUND: '内容不存在或已被删除',
+  LIKE_ERROR: '点赞失败，请重试',
+  FOLLOW_ERROR: '关注失败，请重试',
+  SHARE_ERROR: '分享失败，请重试',
+  LOAD_MORE_ERROR: '加载更多失败',
+  REFRESH_ERROR: '刷新失败',
 } as const;
 
-// 默认配置
-export const DEFAULT_CONFIG = {
-  REFRESH_THRESHOLD: 5000, // 5秒防抖间隔
-  REQUEST_TIMEOUT: 30000, // 30秒请求超时
-  MAX_RETRY_COUNT: 3, // 最大重试次数
-  CACHE_DURATION: 300000, // 5分钟缓存时间
-  
-  // 虚拟滚动配置
-  VIEWPORT_HEIGHT: 667, // iPhone标准屏幕高度
-  BUFFER_SIZE: 1, // 缓冲区大小(屏幕数量)
-  ITEM_HEIGHT_ESTIMATION: 200, // 预估项目高度
-  
-  // 图片加载配置
-  IMAGE_QUALITY: 0.8, // 图片质量
-  THUMBNAIL_SIZE: 200, // 缩略图尺寸
-  MAX_IMAGE_SIZE: 1080 // 最大图片尺寸
+// 成功消息
+export const SUCCESS_MESSAGES = {
+  LIKE_SUCCESS: '点赞成功',
+  UNLIKE_SUCCESS: '取消点赞',
+  FOLLOW_SUCCESS: '关注成功', 
+  UNFOLLOW_SUCCESS: '取消关注',
+  COLLECT_SUCCESS: '收藏成功',
+  UNCOLLECT_SUCCESS: '取消收藏',
+  SHARE_SUCCESS: '分享成功',
+} as const;
+
+// TestID常量（用于自动化测试）
+export const TEST_IDS = {
+  DISCOVER_SCREEN: 'discover_screen',
+  TAB_BAR: 'discover_tab_bar',
+  TAB_FOLLOW: 'tab_follow',
+  TAB_HOT: 'tab_hot', 
+  TAB_LOCAL: 'tab_local',
+  WATERFALL_LIST: 'waterfall_list',
+  CONTENT_CARD: 'content_card',
+  LIKE_BUTTON: 'like_button',
+  AVATAR: 'user_avatar',
+  CART_ICON: 'cart_icon',
+  REFRESH_CONTROL: 'refresh_control',
 } as const;

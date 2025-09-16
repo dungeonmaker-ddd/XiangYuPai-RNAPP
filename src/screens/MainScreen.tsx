@@ -12,10 +12,14 @@ import {
   Alert
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import type { StackNavigationProp } from '@react-navigation/stack';
+import type { RootStackParamList } from '../types/navigation';
 
 // 页面组件导入
-import HomeScreen from './HomeScreen';
+import { HomeScreen } from './home';
 import { DiscoverScreen } from './discover';
+import { MessageCenterScreen } from './message';
+import { ProfileScreen } from './profile/ProfileScreen';
 
 // 全局导航组件导入
 import { GlobalBottomNavigation } from '../navigation';
@@ -23,8 +27,14 @@ import { GlobalBottomNavigation } from '../navigation';
 // 类型定义
 type TabScreen = 'home' | 'discover' | 'message' | 'profile';
 
+type MainScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Main'>;
+
+interface MainScreenProps {
+  navigation: MainScreenNavigationProp;
+}
+
 // 主屏幕组件
-const MainScreen: React.FC = () => {
+const MainScreen: React.FC<MainScreenProps> = ({ navigation }) => {
   const safeAreaInsets = useSafeAreaInsets();
   
   // 当前活跃的标签页
@@ -56,7 +66,15 @@ const MainScreen: React.FC = () => {
           backgroundColor: '#FFFFFF'
         };
       case 'message':
+        return {
+          barStyle: 'dark-content' as const,
+          backgroundColor: '#FFFFFF'
+        };
       case 'profile':
+        return {
+          barStyle: 'light-content' as const,
+          backgroundColor: '#8A2BE2' // 使用Profile页面的紫色主题
+        };
       default:
         return {
           barStyle: 'dark-content' as const,
@@ -71,30 +89,29 @@ const MainScreen: React.FC = () => {
       case 'home':
         return (
           <View style={styles.pageContainer}>
-            <HomeScreen />
+            <HomeScreen navigation={navigation} />
           </View>
         );
       
       case 'discover':
         return (
           <View style={styles.pageContainer}>
-            <DiscoverScreen />
+            <DiscoverScreen navigation={navigation} />
           </View>
         );
       
       case 'message':
-        // 消息页面占位组件
         return (
-          <View style={styles.placeholderContainer}>
-            {/* StatusBar配置已统一到顶层 */}
+          <View style={styles.pageContainer}>
+            <MessageCenterScreen navigation={navigation} />
           </View>
         );
       
       case 'profile':
-        // 个人中心页面占位组件
+        // 个人中心页面
         return (
-          <View style={styles.placeholderContainer}>
-            {/* StatusBar配置已统一到顶层 */}
+          <View style={styles.pageContainer}>
+            <ProfileScreen />
           </View>
         );
       
