@@ -6,7 +6,7 @@
 import React from 'react';
 import { View, StyleSheet, Alert } from 'react-native';
 import { WaterfallContainer } from '../components';
-import { onWaterfallCardClick, createWaterfallCardClickHandler, defaultWaterfallCardClickHandler } from './onWaterfallCardClick';
+import { onWaterfallCardClick, createWaterfallCardClickHandler, defaultWaterfallCardClickHandler } from '../WaterfallCard/onWaterfallCardClick';
 import { ContentItem, TabType } from '../types';
 
 // =====================================================

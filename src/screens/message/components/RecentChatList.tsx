@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { RecentChat } from '../types';
 import { STYLES } from '../constants';
 
@@ -192,27 +192,11 @@ const RecentChatList: React.FC<RecentChatListProps> = ({
   onChatPress,
   onClearAll
 }) => {
-  // 渲染列表标题
-  const renderHeader = () => null;
-
-  // 渲染对话项
-  const renderChatItem = ({ item }: { item: RecentChat }) => (
-    <ChatItem chat={item} onPress={onChatPress} />
-  );
-
-  // 渲染分隔线
-  const renderSeparator = () => null;
-
   return (
     <View style={styles.container}>
-      {renderHeader()}
-      <FlatList
-        data={chats}
-        keyExtractor={(item) => item.id}
-        renderItem={renderChatItem}
-        showsVerticalScrollIndicator={false}
-        ItemSeparatorComponent={renderSeparator}
-      />
+      {chats.map((chat) => (
+        <ChatItem key={chat.id} chat={chat} onPress={onChatPress} />
+      ))}
     </View>
   );
 };
@@ -220,7 +204,6 @@ const RecentChatList: React.FC<RecentChatListProps> = ({
 const styles = StyleSheet.create({
   // 容器样式
   container: {
-    flex: 1,
     backgroundColor: STYLES.COLORS.WHITE
   },
   

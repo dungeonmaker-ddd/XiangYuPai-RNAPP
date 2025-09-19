@@ -21,12 +21,12 @@ import {
   NativeSyntheticEvent,
   ViewStyle,
 } from 'react-native';
-import WaterfallCard from './WaterfallCard';
+import WaterfallCard from '../WaterfallCard';
 import { WaterfallLayoutEngine, LayoutItem } from '../utils/WaterfallLayoutEngine';
 import { VirtualizationManager } from '../utils/VirtualizationManager';
 import { ContentItem, TabType } from '../types';
 import { COLORS, TYPOGRAPHY, LAYOUT_CONSTANTS } from '../constants';
-import { onWaterfallCardClick } from '../events/onWaterfallCardClick';
+import { onWaterfallCardClick } from '../WaterfallCard/onWaterfallCardClick';
 
 // 滚动容器属性接口
 export interface WaterfallScrollViewProps {

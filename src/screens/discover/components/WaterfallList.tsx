@@ -67,4 +67,4 @@ WaterfallList.displayName = 'WaterfallList';
 // 导出新架构的核心组件，供高级用户直接使用
 export { default as WaterfallContainer } from './WaterfallContainer';
 export { default as WaterfallScrollView } from './WaterfallScrollView';
-export { default as WaterfallCard } from './WaterfallCard';
+export { default as WaterfallCard } from '../WaterfallCard';

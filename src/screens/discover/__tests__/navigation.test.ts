@@ -3,7 +3,7 @@
  * 测试从瀑布流卡片到详情页面的导航流程
  */
 
-import { onWaterfallCardClick } from '../events/onWaterfallCardClick';
+import { onWaterfallCardClick } from '../WaterfallCard/onWaterfallCardClick';
 import { ContentItem, TabType } from '../types';
 
 // Mock navigation object
@@ -85,8 +85,8 @@ describe('Navigation Integration', () => {
 
       // 验证返回结果
       expect(result.success).toBe(true);
-      expect(result.action).toBe('navigate');
-      expect(result.data?.screen).toBe('DiscoverDetail');
+      expect(result.action).toBe('navigate_detail');
+      expect(result.data?.targetScreen).toBe('DiscoverDetail');
     });
 
     it('should track analytics when navigation succeeds', async () => {

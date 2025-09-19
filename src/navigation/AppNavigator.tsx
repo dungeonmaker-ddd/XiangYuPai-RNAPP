@@ -13,7 +13,7 @@ import { SearchScreen } from '../screens/search';
 import { GroupCenterScreen } from '../screens/group-center';
 import { PublishGroupScreen } from '../screens/group-center/publish';
 import { PrivateChatScreen } from '../screens/message/private-chat';
-import { DiscoverDetailPage } from '../screens/discover/subpage';
+import { DiscoverDetailPage } from '../screens/discover-detail';
 
 // 导入类型定义
 import type { RootStackParamList } from '../types/navigation';

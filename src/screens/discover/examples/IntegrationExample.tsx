@@ -7,7 +7,7 @@ import React from 'react';
 import { View, StyleSheet, Alert } from 'react-native';
 import { ContentItem, TabType } from '../types';
 import { WaterfallCard } from '../components';
-import { onWaterfallCardClick } from '../events/onWaterfallCardClick';
+import { onWaterfallCardClick } from '../WaterfallCard/onWaterfallCardClick';
 
 interface IntegrationExampleProps {
   navigation: any;

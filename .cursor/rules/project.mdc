@@ -1,0 +1,56 @@
+---
+alwaysApply: true
+---
+文件夹 PATH 列表
+卷序列号为 64C1-D356
+/assets
+/src:
++---globalComponents
++---navigation
++---screens
+|   +---discover
+|   |   +---assets
+|   |   +---components
+|   |   +---events
+|   |   +---examples
+|   |   +---hooks
+|   |   +---services
+|   |   +---utils
+|   |   \---__tests__
+|   +---discover-detail
+|   |   +---components
+|   |   +---examples
+|   |   +---hooks
+|   |   +---services
+|   |   \---types
+|   +---group-center
+|   |   +---components
+|   |   \---publish
+|   |       \---components
+|   |           \---modals
+|   +---home
+|   |   \---components
+|   +---location
+|   |   \---components
+|   +---message
+|   |   +---components
+|   |   |   +---functionBtn
+|   |   |   \---title
+|   |   +---like-collect
+|   |   |   \---components
+|   |   \---private-chat
+|   |       +---components
+|   |       \---pchat
+|   +---profile
+|   |   \---components
+|   |       +---fuction
+|   |       +---transaction
+|   |       \---userhead
+|   +---report
+|   |   +---components
+|   |   +---events
+|   |   +---hooks
+|   |   \---services
+|   \---search
+|       \---components
+\---types

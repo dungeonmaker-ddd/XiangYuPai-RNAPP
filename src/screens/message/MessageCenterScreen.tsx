@@ -12,7 +12,7 @@ import {
   StatusBar,
   Alert,
   RefreshControl,
-  ScrollView
+  FlatList
 } from 'react-native';
 import { MessageCategory, RecentChat } from './types';
 import { MESSAGE_CATEGORIES, STYLES } from './constants';
@@ -153,7 +153,34 @@ const MessageCenterScreen: React.FC<MessageCenterScreenProps> = ({ navigation })
     );
   }
 
+  // ==================== Render Functions ====================
+  const renderSectionItem = ({ item }: { item: { type: string; data?: any } }) => {
+    switch (item.type) {
+      case 'categories':
+        return (
+          <MessageCategoryGrid
+            categories={state.categories}
+            onCategoryPress={handleCategoryPress}
+          />
+        );
+      case 'chats':
+        return (
+          <RecentChatList
+            onChatPress={handleChatPress}
+            onClearAll={handleClearAllChats}
+          />
+        );
+      default:
+        return null;
+    }
+  };
+
   // ==================== Main Render ====================
+  const sections = [
+    { type: 'categories', id: 'categories' },
+    { type: 'chats', id: 'chats' }
+  ];
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor={STYLES.COLORS.WHITE} />
@@ -164,8 +191,12 @@ const MessageCenterScreen: React.FC<MessageCenterScreenProps> = ({ navigation })
         showClearButton={true}
       />
       
-      <ScrollView
+      <FlatList
+        data={sections}
+        keyExtractor={(item) => item.id}
+        renderItem={renderSectionItem}
         style={styles.scrollContainer}
+        showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl
             refreshing={state.refreshing}
@@ -173,19 +204,7 @@ const MessageCenterScreen: React.FC<MessageCenterScreenProps> = ({ navigation })
             colors={[STYLES.COLORS.PRIMARY]}
           />
         }
-      >
-        {/* 消息分类功能区 */}
-        <MessageCategoryGrid
-          categories={state.categories}
-          onCategoryPress={handleCategoryPress}
-        />
-        
-        {/* 最近对话列表 */}
-        <RecentChatList
-          onChatPress={handleChatPress}
-          onClearAll={handleClearAllChats}
-        />
-      </ScrollView>
+      />
     </SafeAreaView>
   );
 };
