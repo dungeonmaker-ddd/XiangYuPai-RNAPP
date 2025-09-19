@@ -21,7 +21,7 @@
 3. **📋 必须创建的核心文件**
    ```
    src/screens/{PageName}/{ComponentName}/     # 伪页面组件根目录
-   ├── index.[ext]                             # 主组件文件 (必需)
+   ├── {ComponentName}.[ext]                   # 主组件文件 (必需)
    ├── types.[ext]                             # 类型定义 (必需)
    ├── constants.[ext]                         # 常量定义 (必需)
    ├── use{ComponentName}.[ext]                # 主状态管理 (必需)
@@ -55,7 +55,153 @@
 - **前瞻性设计**: 即使当前功能简单，也要为未来扩展预留完整的架构空间
 - **平等地位**: 伪页面组件与页面主文件处于同一目录层级
 
-**重要提醒：不要问用户"是否需要"，直接按照伪页面组件完整架构标准实施重构！**
+### 💡 代码实施原则 (YAGNI + MVP)
+
+**架构完整 ≠ 代码复杂**：虽然架构必须完整，但具体实施的文件代码必须遵循 **YAGNI + MVP** 原则：
+
+#### 🎯 **YAGNI 原则** (You Aren't Gonna Need It)
+- **只实现当前需要的功能** - 不预先实现可能用到的功能
+- **避免过度设计** - 不添加当前用不到的复杂逻辑
+- **简单优先** - 优先选择最简单的实现方式
+
+#### 🚀 **MVP 原则** (Minimum Viable Product)
+- **最小可用实现** - 每个文件只包含核心必需功能
+- **渐进式完善** - 后续根据实际需求逐步完善
+- **快速迭代** - 优先实现可用版本，再优化完善
+
+#### 📋 **实施策略**
+
+```typescript
+// ✅ 推荐：YAGNI + MVP 实施
+// types.ts - 只定义当前需要的类型
+export interface UserCardProps {
+  id: string;
+  name: string;
+  avatar?: string;
+}
+
+// constants.ts - 只定义当前使用的常量
+export const USER_CARD_HEIGHT = 120;
+
+// useUserCard.ts - 只实现核心状态管理
+export const useUserCard = (props: UserCardProps) => {
+  const [isLoading, setIsLoading] = useState(false);
+  return { isLoading, setIsLoading };
+};
+
+// ❌ 避免：过度设计
+// 不要预先实现可能用不到的复杂状态管理、缓存机制、复杂计算等
+```
+
+#### 🔄 **架构与实施的平衡**
+
+| 层面 | 要求 | 原则 |
+|------|------|------|
+| **架构层面** | 完整结构，预留扩展空间 | 前瞻性设计 |
+| **代码层面** | 最小可用实现，渐进完善 | YAGNI + MVP |
+
+### 📝 YAGNI + MVP 代码编写指导
+
+#### 🎯 **各文件类型的 YAGNI + MVP 实施标准**
+
+##### **types.ts - 类型定义文件**
+```typescript
+// ✅ 推荐：只定义当前需要的类型
+export interface UserCardProps {
+  id: string;
+  name: string;
+  avatar?: string; // 可选属性用 ? 标记
+}
+
+// ❌ 避免：预定义可能用到的复杂类型
+// export interface UserCardAdvancedProps extends UserCardProps {
+//   permissions?: Permission[];
+//   metadata?: Record<string, any>;
+//   callbacks?: UserCardCallbacks;
+// }
+```
+
+##### **constants.ts - 常量定义文件**
+```typescript
+// ✅ 推荐：只定义当前使用的常量
+export const USER_CARD_HEIGHT = 120;
+export const DEFAULT_AVATAR = '/images/default-avatar.png';
+
+// ❌ 避免：预定义大量可能用到的常量
+// export const USER_CARD_ANIMATION_DURATION = 300;
+// export const USER_CARD_CACHE_TTL = 5 * 60 * 1000;
+// export const USER_CARD_RETRY_ATTEMPTS = 3;
+```
+
+##### **use[ComponentName].ts - 状态管理文件**
+```typescript
+// ✅ 推荐：最小可用状态管理
+export const useUserCard = (props: UserCardProps) => {
+  const [isLoading, setIsLoading] = useState(false);
+  
+  return {
+    isLoading,
+    setIsLoading,
+  };
+};
+
+// ❌ 避免：复杂的状态管理预设
+// const [cache, setCache] = useState<Map<string, UserData>>(new Map());
+// const [retryCount, setRetryCount] = useState(0);
+// const [lastFetchTime, setLastFetchTime] = useState<Date | null>(null);
+```
+
+##### **on[ComponentName][Action].ts - 事件处理文件**
+```typescript
+// ✅ 推荐：核心事件处理
+export const onUserCardClick = (userId: string) => {
+  console.log('User card clicked:', userId);
+  // 基础点击处理逻辑
+};
+
+// ❌ 避免：复杂的事件处理预设
+// export const onUserCardDoubleClick = ...
+// export const onUserCardLongPress = ...
+// export const onUserCardSwipe = ...
+```
+
+##### **api[ComponentName][Action].ts - API接口文件**
+```typescript
+// ✅ 推荐：核心API接口
+export const apiUserCardFetch = async (id: string) => {
+  const response = await fetch(`/api/users/${id}`);
+  return response.json();
+};
+
+// ❌ 避免：预设复杂API接口
+// export const apiUserCardBatchFetch = ...
+// export const apiUserCardCacheManager = ...
+// export const apiUserCardRetryWrapper = ...
+```
+
+#### 🔄 **渐进式完善策略**
+
+1. **第一版实现** - MVP 版本
+   - 只实现核心必需功能
+   - 基础的类型定义和状态管理
+   - 简单的事件处理和API调用
+
+2. **后续迭代** - 根据实际需求扩展
+   - 添加新的类型定义（当需要时）
+   - 扩展状态管理（当业务复杂时）
+   - 增加事件处理（当交互丰富时）
+   - 完善API接口（当数据需求增加时）
+
+#### 💡 **YAGNI + MVP 核心原则**
+
+| 原则 | 说明 | 实施方式 |
+|------|------|----------|
+| **需要时再添加** | 不预先实现可能用到的功能 | 从最简单的实现开始 |
+| **保持简洁** | 每个文件只包含核心功能 | 避免过度抽象和复杂逻辑 |
+| **快速迭代** | 优先可用版本，后续完善 | MVP → 渐进式改进 |
+| **避免过度设计** | 不添加当前用不到的代码 | 专注于当前需求 |
+
+**重要提醒：不要问用户"是否需要"，直接按照伪页面组件完整架构标准实施重构！但每个文件的具体代码实现必须遵循 YAGNI + MVP 原则！**
 
 ---
 
@@ -149,7 +295,7 @@ src/screens/{PageName}/
 ```
 src/screens/discover/                               # 页面层
 ├── WaterfallCard/                                 # ✅ 伪页面组件
-│   ├── index.tsx                                  # 主组件文件
+│   ├── WaterfallCard.tsx                          # 主组件文件
 │   ├── types.ts                                   # 类型定义
 │   ├── constants.ts                               # 常量配置
 │   ├── useWaterfallCard.ts                        # 状态管理
@@ -158,7 +304,7 @@ src/screens/discover/                               # 页面层
 │   ├── formatWaterfallCardDisplay.ts              # 工具函数
 │   └── README.md                                  # 组件文档
 ├── TabBar/                                        # ✅ 伪页面组件
-│   ├── index.tsx
+│   ├── TabBar.tsx
 │   ├── types.ts
 │   ├── constants.ts
 │   ├── useTabBar.ts
@@ -174,7 +320,7 @@ src/screens/discover/                               # 页面层
 ```
 src/screens/home/                                  # 页面层
 ├── UserCard/                                      # ✅ 伪页面组件
-│   ├── index.tsx
+│   ├── UserCard.tsx
 │   ├── types.ts
 │   ├── constants.ts
 │   ├── useUserCard.ts
@@ -195,7 +341,7 @@ src/screens/home/                                  # 页面层
 src/screens/{PageName}/{ComponentName}/             # 伪页面组件根目录
 │
 ├── 🏗️ 核心文件 (必需)
-│   ├── Component.[ext] 或 index.[ext]              # 主组件文件 - UI渲染和功能组装
+│   ├── {ComponentName}.[ext]                       # 主组件文件 - UI渲染和功能组装
 │   ├── types.[ext]                                 # 类型定义 - 接口、类型、约束
 │   ├── constants.[ext]                             # 常量定义 - 配置、默认值
 │   └── README.md                                   # 组件文档 - 使用说明、API
@@ -251,14 +397,14 @@ src/screens/{PageName}/{ComponentName}/             # 伪页面组件根目录
 
 | 文件类型 | 命名格式 | 职责描述 |
 |---------|---------|----------|
-| **主组件** | `Component.[ext]` 或 `index.[ext]` | 组件的主要UI实现和功能组装 |
+| **主组件** | `{ComponentName}.[ext]` | 组件的主要UI实现和功能组装 |
 | **类型定义** | `types.[ext]` | 数据结构、接口、类型定义 |
 | **常量定义** | `constants.[ext]` | 组件相关的常量配置 |
 | **组件文档** | `README.md` | 组件使用说明和API文档 |
 
 ### 🏗️ 主组件文件详细构成
 
-#### 📋 主组件文件 (`Component.[ext]` 或 `index.[ext]`) 的核心职责
+#### 📋 主组件文件 (`{ComponentName}.[ext]`) 的核心职责
 - **UI渲染逻辑** - 组件的视觉呈现和布局结构
 - **功能模块组装** - 整合状态管理、事件处理、导航等模块
 - **Props接口实现** - 实现对外暴露的属性接口
@@ -269,7 +415,7 @@ src/screens/{PageName}/{ComponentName}/             # 伪页面组件根目录
 #### 🔧 主组件文件的典型结构层次
 
 ```
-主组件文件 (Component.[ext])
+主组件文件 ({ComponentName}.[ext])
 │
 ├── 📦 导入声明区域
 │   ├── 框架核心导入 (React, Vue, Angular等)
@@ -326,7 +472,7 @@ src/screens/{PageName}/{ComponentName}/             # 伪页面组件根目录
 
 ##### 🟢 简单展示型组件构成
 ```
-简单组件 (Component.[ext])
+简单组件 ({ComponentName}.[ext])
 ├── 基础导入 (框架 + 内部types)
 ├── Props接收
 ├── 基础渲染逻辑
@@ -336,7 +482,7 @@ src/screens/{PageName}/{ComponentName}/             # 伪页面组件根目录
 
 ##### 🟡 交互型组件构成
 ```
-交互组件 (Component.[ext])
+交互组件 ({ComponentName}.[ext])
 ├── 扩展导入 (+ 状态管理 + 事件处理)
 ├── Props接收和验证
 ├── 状态管理 (1-2个hooks)
@@ -348,7 +494,7 @@ src/screens/{PageName}/{ComponentName}/             # 伪页面组件根目录
 
 ##### 🔴 复杂业务型组件构成
 ```
-复杂组件 (Component.[ext])
+复杂组件 ({ComponentName}.[ext])
 ├── 完整导入 (框架 + 所有内部模块)
 ├── Props接收、验证、默认值
 ├── 多层状态管理 (3-5个hooks)
@@ -374,7 +520,7 @@ src/screens/{PageName}/{ComponentName}/             # 伪页面组件根目录
 #### 🔄 主组件文件与其他文件的协作关系
 
 ```
-主组件 (Component.[ext])
+主组件 ({ComponentName}.[ext])
     ↓ 导入使用
 ┌── types.[ext] ──────────── 提供类型定义和接口约束
 ├── constants.[ext] ──────── 提供常量配置和默认值
@@ -387,6 +533,40 @@ src/screens/{PageName}/{ComponentName}/             # 伪页面组件根目录
     ↓ 组合调用
 主组件渲染输出 → 对外提供完整的组件功能
 ```
+
+#### 📦 外部导入使用方式
+
+**使用具名主组件文件的优势**：
+
+```typescript
+// ✅ 推荐：直接导入具名主组件
+import UserCard from './UserCard/UserCard';
+import WaterfallCard from './WaterfallCard/WaterfallCard';
+import TabBar from './TabBar/TabBar';
+
+// 使用时非常明确
+<UserCard id="123" name="张三" />
+<WaterfallCard data={cardData} />
+<TabBar activeTab={currentTab} />
+```
+
+**与 index 文件对比**：
+
+```typescript
+// ❌ 不推荐：使用 index 文件（模糊不清）
+import UserCard from './UserCard';  // 不知道导入的具体是什么文件
+import WaterfallCard from './WaterfallCard';  // 可能是 index.tsx, index.js 等
+
+// ✅ 推荐：使用具名文件（明确清晰）
+import UserCard from './UserCard/UserCard';  // 明确知道导入的是 UserCard.tsx
+import WaterfallCard from './WaterfallCard/WaterfallCard';  // 明确知道导入的是 WaterfallCard.tsx
+```
+
+**导入明确性优势**：
+- **代码可读性更强** - 一眼就知道导入的是哪个具体文件
+- **IDE 支持更好** - 自动补全和跳转更准确
+- **调试更方便** - 错误信息会显示具体的文件名
+- **重构更安全** - 重命名时影响范围更明确
 
 #### 💡 主组件文件的最佳实践
 
@@ -918,7 +1098,7 @@ SQL配置 (sql[ComponentName].xml)
 ### 📦 组件根目录 (扁平化组织)
 ```
 ComponentName/                          # 组件名称，使用PascalCase
-├── index.[ext]                         # 主组件实现 (必需)
+├── {ComponentName}.[ext]               # 主组件实现 (必需)
 ├── types.[ext]                         # 类型定义 (必需)
 ├── constants.[ext]                     # 常量配置 (可选)
 ├── README.md                          # 文档说明 (推荐)
@@ -942,7 +1122,7 @@ ComponentName/                          # 组件名称，使用PascalCase
 ### 🎯 按功能前缀组织
 ```
 ComponentName/
-├── index.[ext]                         # 主组件 (UI渲染和组装)
+├── {ComponentName}.[ext]               # 主组件 (UI渲染和组装)
 ├── types.[ext]                         # 类型定义
 ├── constants.[ext]                     # 常量配置
 │
@@ -956,7 +1136,7 @@ ComponentName/
 
 ### 🔗 扁平化依赖关系
 ```
-主组件 (index.[ext])
+主组件 ({ComponentName}.[ext])
     ↓ 直接导入
 状态管理 (use*) + 用户事件 (on*) + 导航 (navigate*) + 接口 (api*)
     ↓ 可能依赖  
@@ -976,7 +1156,7 @@ ComponentName/
 ### 🎯 完整组件结构 (统一标准)
 ```
 ComponentName/
-├── index.[ext]                         # 主组件
+├── {ComponentName}.[ext]               # 主组件
 ├── types.[ext]                         # 类型定义
 ├── constants.[ext]                     # 常量定义
 ├── use[ComponentName].[ext]            # 主状态管理
@@ -1000,7 +1180,7 @@ ComponentName/
 
 ### 🔧 实施原则
 
-1. **核心文件必须创建**: `index + types + constants + use[ComponentName] + README`
+1. **核心文件必须创建**: `{ComponentName} + types + constants + use[ComponentName] + README`
 2. **功能文件按需创建**: 根据组件实际功能需求创建对应的功能文件
 3. **API与后端配套**: 创建API接口层时必须同时创建完整的后端交互层
 4. **预留扩展空间**: 即使当前不需要，也要考虑未来可能的扩展需求
@@ -1121,7 +1301,7 @@ ComponentName/
 ```
 1. 创建组件根目录 ComponentName/
 2. 创建核心文件：
-   ✅ index.[ext] - 主组件文件
+   ✅ {ComponentName}.[ext] - 主组件文件
    ✅ types.[ext] - 类型定义文件
    ✅ constants.[ext] - 常量定义文件
    ✅ README.md - 组件文档文件
@@ -1135,18 +1315,20 @@ ComponentName/
    ✅ format[ComponentName]*.[ext] - 工具函数文件
 ```
 
-#### 3️⃣ 重构阶段 (逐文件执行)
+#### 3️⃣ 重构阶段 (逐文件执行 - 遵循 YAGNI + MVP)
 ```
 ✅ 将原组件代码按职责拆分到对应文件
-✅ 提取所有类型定义到 types.[ext]
-✅ 提取所有常量到 constants.[ext]
-✅ 拆分状态管理逻辑到 use*.[ext]
-✅ 拆分事件处理逻辑到 on*.[ext]
-✅ 拆分导航逻辑到 navigate*.[ext]
-✅ 拆分API调用到 api*.[ext]（同时创建backend/）
-✅ 创建完整后端交互层 backend/（配套API接口）
-✅ 拆分数据处理到 process*.[ext]
-✅ 重构主组件文件，整合各模块
+✅ 提取所有类型定义到 types.[ext] (仅当前需要的类型)
+✅ 提取所有常量到 constants.[ext] (仅当前使用的常量)
+✅ 拆分状态管理逻辑到 use*.[ext] (最小可用状态管理)
+✅ 拆分事件处理逻辑到 on*.[ext] (核心事件处理)
+✅ 拆分导航逻辑到 navigate*.[ext] (基础导航功能)
+✅ 拆分API调用到 api*.[ext] (核心API接口，配套backend/)
+✅ 创建完整后端交互层 backend/ (最小可用后端实现)
+✅ 拆分数据处理到 process*.[ext] (基础数据处理)
+✅ 重构主组件文件，整合各模块 (简洁的组装逻辑)
+
+🎯 重构原则：架构完整 + 实现简洁 (YAGNI + MVP)
 ```
 
 #### 4️⃣ 验证阶段 (质量检查)
@@ -1241,7 +1423,7 @@ src/screens/{PageName}/
 ```
 src/screens/{PageName}/                            # 页面层
 ├── {ComponentName}/                               # ✅ 伪页面组件 (扁平化)
-│   ├── index.tsx                                  # 主组件文件
+│   ├── {ComponentName}.tsx                        # 主组件文件
 │   ├── types.ts                                   # 类型定义
 │   ├── constants.ts                               # 常量配置
 │   ├── use{ComponentName}.ts                      # 状态管理
@@ -1259,7 +1441,7 @@ src/screens/{PageName}/                            # 页面层
 **迁移后**:
 ```
 src/screens/home/UserCard/                         # ✅ 新的伪页面组件位置
-├── index.tsx                                      # 从原 UserCard.tsx 重构
+├── UserCard.tsx                                   # 从原 UserCard.tsx 重构
 ├── types.ts                                       # 提取类型定义
 ├── constants.ts                                   # 提取常量
 ├── useUserCard.ts                                 # 提取状态管理
@@ -1330,10 +1512,20 @@ import WaterfallCard from './WaterfallCard';
 
 ### 🎯 伪页面组件架构核心原则总结
 
+#### 🏗️ **架构层面原则**
 1. **扁平化组织** - 所有组件直接位于 `src/screens/{PageName}/{ComponentName}/`
 2. **移除中间层** - 禁止使用 `components/` 中间层级
 3. **统一标准** - 所有伪页面组件都按完整架构实施
 4. **不允许简化** - 禁止因组件简单而省略结构
 5. **前瞻性设计** - 为未来扩展预留完整架构空间
 6. **平等地位** - 伪页面组件与页面主文件处于同一层级
-7. **强制执行** - Agent 必须严格按标准执行，无选择余地
+
+#### 💻 **代码实施原则**
+7. **YAGNI 原则** - 只实现当前需要的功能，避免过度设计
+8. **MVP 原则** - 每个文件只包含核心必需功能，渐进式完善
+9. **架构完整 + 实现简洁** - 结构完整但代码简洁
+10. **快速迭代** - 优先可用版本，后续根据需求完善
+
+#### 🚀 **执行原则**
+11. **强制执行** - Agent 必须严格按标准执行，无选择余地
+12. **双重标准** - 架构必须完整，代码必须简洁 (YAGNI + MVP)

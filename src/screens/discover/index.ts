@@ -5,11 +5,9 @@
 // 主组件
 export { DiscoverScreen } from './DiscoverScreen';
 
-// 子组件
-export * from './components';
-
-// 自定义Hooks
-export * from './hooks';
+// 伪页面组件
+export { default as TabBar } from './TabBar';
+export { default as WaterfallList } from './WaterfallList';
 
 
 // 工具函数

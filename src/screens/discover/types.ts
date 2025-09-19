@@ -73,11 +73,13 @@ export interface ContentCardProps {
   onShare: (item: ContentItem) => void;
 }
 
-// Tab栏Props
+// Tab栏Props (包含购物车功能)
 export interface TabBarProps {
   tabs: TabConfig[];
   activeTab: TabType;
   onTabPress: (tab: TabType) => void;
+  onCartPress?: () => void;
+  cartBadgeCount?: number;
 }
 
 // 瀑布流列表Props

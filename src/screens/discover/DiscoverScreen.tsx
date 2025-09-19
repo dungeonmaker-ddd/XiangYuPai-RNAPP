@@ -9,12 +9,10 @@ import {
   StyleSheet,
   SafeAreaView,
   StatusBar,
-  TouchableOpacity,
-  Text,
   Alert,
 } from 'react-native';
-import { TabBar } from './components/TabBar';
-import { WaterfallList } from './components/WaterfallList';
+import TabBar from './TabBar';
+import { WaterfallList } from './WaterfallList';
 import { 
   DiscoverScreenProps, 
   TabType, 
@@ -217,11 +215,6 @@ export const DiscoverScreen: React.FC<DiscoverScreenProps> = ({ navigation }) =>
     }
   }, [currentHasMore, currentLoading, state.currentTab, pages, loadContent]);
 
-  // 处理内容卡片点击
-  const handleItemPress = useCallback((item: ContentItem) => {
-    console.log('点击内容:', item.id);
-    // navigation.navigate('ContentDetail', { contentId: item.id });
-  }, []);
 
   // 处理点赞
   const handleLike = useCallback(async (itemId: string) => {
@@ -283,88 +276,21 @@ export const DiscoverScreen: React.FC<DiscoverScreenProps> = ({ navigation }) =>
     }
   }, [currentContent, state.currentTab]);
 
-  // 处理收藏
-  const handleCollect = useCallback(async (itemId: string) => {
-    try {
-      const item = currentContent.find(item => item.id === itemId);
-      if (!item) return;
 
-      // 乐观更新UI
-      setState(prev => ({
-        ...prev,
-        content: {
-          ...prev.content,
-          [state.currentTab]: prev.content[state.currentTab].map(contentItem =>
-            contentItem.id === itemId
-              ? { ...contentItem, isCollected: !contentItem.isCollected }
-              : contentItem
-          ),
-        },
-      }));
 
-      // 模拟API调用
-      await mockApiCall({ success: true }, 300);
-      
-    } catch (error) {
-      console.error('收藏失败:', error);
-      // 回滚UI状态
-      setState(prev => ({
-        ...prev,
-        content: {
-          ...prev.content,
-          [state.currentTab]: prev.content[state.currentTab].map(contentItem =>
-            contentItem.id === itemId
-              ? { ...contentItem, isCollected: !contentItem.isCollected }
-              : contentItem
-          ),
-        },
-      }));
-    }
-  }, [currentContent, state.currentTab]);
 
-  // 处理用户头像点击
-  const handleUserPress = useCallback((userId: string) => {
-    console.log('点击用户:', userId);
-    // navigation.navigate('UserProfile', { userId });
-  }, []);
-
-  // 处理分享
-  const handleShare = useCallback((item: ContentItem) => {
-    console.log('分享内容:', item.id);
-    Alert.alert('分享', `分享内容: ${item.title}`);
-  }, []);
-
-  // 处理购物车点击
-  const handleCartPress = useCallback(() => {
-    console.log('点击购物车');
-    // navigation.navigate('Cart');
-  }, []);
 
   return (
     <SafeAreaView style={styles.container} testID={TEST_IDS.DISCOVER_SCREEN}>
       <StatusBar barStyle="dark-content" backgroundColor={COLORS.BACKGROUND} />
       
       {/* 顶部导航栏 */}
-      <View style={styles.header}>
-        {/* Tab栏 */}
-        <TabBar
-          tabs={TABS}
-          activeTab={state.currentTab}
-          onTabPress={handleTabPress}
-        />
-        
-        {/* 购物车图标 */}
-        <TouchableOpacity
-          style={styles.cartButton}
-          onPress={handleCartPress}
-          testID={TEST_IDS.CART_ICON}
-        >
-          <Text style={styles.cartIcon}>🛒</Text>
-          <View style={styles.cartBadge}>
-            <Text style={styles.cartBadgeText}>0</Text>
-          </View>
-        </TouchableOpacity>
-      </View>
+      {/* @ts-ignore */}
+      <TabBar
+        tabs={TABS}
+        activeTab={state.currentTab}
+        onTabPress={handleTabPress}
+      />
 
       {/* 主内容区域 */}
       <View style={styles.content}>
@@ -375,11 +301,7 @@ export const DiscoverScreen: React.FC<DiscoverScreenProps> = ({ navigation }) =>
           hasMore={currentHasMore}
           onRefresh={handleRefresh}
           onLoadMore={handleLoadMore}
-          onItemPress={handleItemPress}
           onLike={handleLike}
-          onCollect={handleCollect}
-          onUserPress={handleUserPress}
-          onShare={handleShare}
           navigation={navigation}
         />
       </View>
@@ -391,47 +313,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.BACKGROUND,
-  },
-  
-  header: {
-    backgroundColor: COLORS.BACKGROUND,
-    borderBottomWidth: 1,
-    borderBottomColor: COLORS.BORDER_LIGHT,
-    position: 'relative',
-  },
-  
-  cartButton: {
-    position: 'absolute',
-    top: LAYOUT_CONSTANTS.MARGIN_SMALL,
-    right: LAYOUT_CONSTANTS.PADDING_HORIZONTAL,
-    width: 44,
-    height: 44,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  
-  cartIcon: {
-    fontSize: LAYOUT_CONSTANTS.ICON_SIZE_LARGE,
-    color: COLORS.TEXT_PRIMARY,
-  },
-  
-  cartBadge: {
-    position: 'absolute',
-    top: 2,
-    right: 2,
-    backgroundColor: COLORS.ERROR,
-    borderRadius: 8,
-    minWidth: 16,
-    height: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 4,
-  },
-  
-  cartBadgeText: {
-    fontSize: 10,
-    color: COLORS.BACKGROUND,
-    fontWeight: 'bold',
   },
   
   content: {
