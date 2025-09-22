@@ -14,7 +14,7 @@ import {
   CommentItem,
   InteractionType,
 } from '../types';
-import { ContentItem } from '../../discover/types';
+import { ContentItem } from '../../discover/WaterfallList/types';
 
 // 模拟API延迟
 const API_DELAY = 1000;

@@ -18,7 +18,7 @@ export * from './discover';
 export * from './message';
 
 // 地区选择模块
-export * from './location';
+export * from './home-location';
 
 // 组局中心模块
 export * from './group-center';

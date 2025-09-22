@@ -76,8 +76,8 @@ export interface ProfilePageState {
   refreshing: boolean;
 }
 
-// 组件Props类型
-export interface UserHeaderProps {
+// 组件Props类型 - 基于新的嵌套化架构
+export interface UserInfoAreaProps {
   userInfo: UserInfo | null;
   onAvatarPress: () => void;
   onEditNickname: () => void;
@@ -85,15 +85,20 @@ export interface UserHeaderProps {
   onViewProfile: () => void;
 }
 
-export interface TransactionSectionProps {
+export interface TransactionAreaProps {
   transactionCounts: TransactionCounts | null;
   onFunctionPress: (functionId: string) => void;
 }
 
-export interface ToolsSectionProps {
+export interface ToolsAreaProps {
   walletInfo: WalletInfo | null;
   onFunctionPress: (functionId: string) => void;
 }
+
+// 保持向后兼容的类型别名
+export interface UserHeaderProps extends UserInfoAreaProps {}
+export interface TransactionSectionProps extends TransactionAreaProps {}
+export interface ToolsSectionProps extends ToolsAreaProps {}
 
 export interface FunctionCardProps {
   config: FunctionConfig;

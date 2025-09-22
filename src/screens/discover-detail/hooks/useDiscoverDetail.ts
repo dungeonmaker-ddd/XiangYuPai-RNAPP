@@ -12,7 +12,7 @@ import {
   CommentActionType,
   DetailPageError,
 } from '../types';
-import { ContentItem } from '../../discover/types';
+import { ContentItem } from '../../discover/WaterfallList/types';
 import DetailDataService from '../services/DetailDataService';
 
 /**

@@ -17,14 +17,11 @@ import {
 } from 'react-native';
 // import LinearGradient from 'react-native-linear-gradient';
 
-// 内部组件导入
-import { 
-  UserHeader, 
-  TransactionSection, 
-  FunctionGrid,
-  AvatarSkeleton,
-  TransactionSectionSkeleton,
-} from './components';
+// 内部组件导入 - 基于新的嵌套化架构
+import { UserInfoArea } from './UserInfoArea';
+import { TransactionArea } from './TransactionArea';
+import { ToolsArea } from './ToolsArea';
+import { SkeletonLoader } from './SharedComponents/SkeletonLoader';
 
 // 类型和常量导入
 import type {
@@ -277,7 +274,7 @@ export const ProfileScreen: React.FC = () => {
           </View>
           
           
-          <UserHeader
+          <UserInfoArea
             userInfo={state.userInfo}
             onAvatarPress={handleAvatarPress}
             onEditNickname={handleEditNickname}
@@ -288,9 +285,9 @@ export const ProfileScreen: React.FC = () => {
 
         {/* 交易功能区域 */}
         {state.isLoading ? (
-          <TransactionSectionSkeleton />
+          <SkeletonLoader width={300} height={120} />
         ) : (
-          <TransactionSection
+          <TransactionArea
             transactionCounts={state.transactionCounts}
             onFunctionPress={handleFunctionPress}
           />
@@ -298,7 +295,7 @@ export const ProfileScreen: React.FC = () => {
 
         {/* 功能区域 */}
         {!state.isLoading && (
-          <FunctionGrid
+          <ToolsArea
             walletInfo={state.walletInfo}
             onFunctionPress={handleFunctionPress}
           />

@@ -1,10 +1,21 @@
+// #region 1. File Banner & TOC
 /**
- * 消息系统模块 - 全局常量定义
+ * 消息系统模块 - 常量定义
+ * 
+ * TOC (快速跳转):
+ * [1] Message Categories
+ * [2] Style Constants
+ * [3] Animation Constants
+ * [4] Config Constants
+ * [5] Time Format Constants
+ * [6] API Constants
+ * [7] Route Constants
  */
+// #endregion
 
+// #region 2. Message Categories
 import { MessageType } from './types';
 
-// 消息分类配置
 export const MESSAGE_CATEGORIES = [
   {
     id: 'like_collect',
@@ -12,7 +23,8 @@ export const MESSAGE_CATEGORIES = [
     title: '赞和收藏',
     icon: '💖',
     iconColor: '#FF69B4',
-    route: 'LikeCollectScreen'
+    route: 'LikeCollectScreen',
+    unreadCount: 0
   },
   {
     id: 'comment', 
@@ -20,7 +32,8 @@ export const MESSAGE_CATEGORIES = [
     title: '评论',
     icon: '💬',
     iconColor: '#4A90E2',
-    route: 'CommentScreen'
+    route: 'CommentScreen',
+    unreadCount: 0
   },
   {
     id: 'follower',
@@ -28,7 +41,8 @@ export const MESSAGE_CATEGORIES = [
     title: '粉丝',
     icon: '👥',
     iconColor: '#FF8C00',
-    route: 'FollowerScreen'
+    route: 'FollowerScreen',
+    unreadCount: 0
   },
   {
     id: 'system',
@@ -36,13 +50,15 @@ export const MESSAGE_CATEGORIES = [
     title: '系统通知',
     icon: '🔔',
     iconColor: '#8A2BE2',
-    route: 'SystemNotificationScreen'
+    route: 'SystemNotificationScreen',
+    unreadCount: 0
   }
 ];
+// #endregion
 
-// 样式常量
+// #region 3. Style Constants
 export const STYLES = {
-  // 颜色
+  // 颜色系统
   COLORS: {
     PRIMARY: '#8A2BE2',
     SECONDARY: '#9370DB',
@@ -58,7 +74,7 @@ export const STYLES = {
     PINK: '#FF69B4'
   },
   
-  // 尺寸
+  // 尺寸系统
   SIZES: {
     HEADER_HEIGHT: 56,
     CATEGORY_GRID_HEIGHT: 120,
@@ -78,7 +94,7 @@ export const STYLES = {
     ICON_MEDIUM: 24,
     ICON_SMALL: 16,
     
-    // 圆角
+    // 圆角系统
     BORDER_RADIUS: {
       SMALL: 6,
       MEDIUM: 12,
@@ -87,7 +103,7 @@ export const STYLES = {
     }
   },
   
-  // 字体
+  // 字体系统
   FONTS: {
     SIZE: {
       SMALL: 12,
@@ -102,7 +118,7 @@ export const STYLES = {
     }
   },
   
-  // 间距
+  // 间距系统
   SPACING: {
     XS: 4,
     SM: 8,
@@ -112,8 +128,9 @@ export const STYLES = {
     XXL: 32
   }
 };
+// #endregion
 
-// 动画配置
+// #region 4. Animation Constants
 export const ANIMATIONS = {
   DURATION: {
     FAST: 200,
@@ -123,10 +140,15 @@ export const ANIMATIONS = {
   EASING: {
     EASE_IN_OUT: 'ease-in-out',
     EASE_OUT: 'ease-out'
+  },
+  SPRING: {
+    DAMPING: 0.8,
+    STIFFNESS: 100
   }
 };
+// #endregion
 
-// 消息相关配置
+// #region 5. Config Constants
 export const MESSAGE_CONFIG = {
   // 分页配置
   PAGE_SIZE: 20,
@@ -141,15 +163,53 @@ export const MESSAGE_CONFIG = {
   
   // 图片配置
   IMAGE_MAX_SIZE: 2 * 1024 * 1024, // 2MB
-  IMAGE_QUALITY: 0.8
+  IMAGE_QUALITY: 0.8,
+  
+  // 消息配置
+  MAX_UNREAD_DISPLAY: 99,
+  AUTO_REFRESH_INTERVAL: 60 * 1000 // 1分钟
 };
+// #endregion
 
-// 时间格式化配置
+// #region 6. Time Format Constants
 export const TIME_FORMATS = {
   JUST_NOW: '刚刚',
   MINUTES_AGO: (n: number) => `${n}分钟前`,
   HOURS_AGO: (n: number) => `${n}小时前`,
   YESTERDAY: '昨天',
   DATE_FORMAT: 'MM-DD',
-  TIME_FORMAT: 'HH:mm'
+  TIME_FORMAT: 'HH:mm',
+  FULL_FORMAT: 'YYYY-MM-DD HH:mm'
 };
+// #endregion
+
+// #region 7. API Constants
+export const API_ENDPOINTS = {
+  MESSAGE_DATA: '/api/messages/data',
+  RECENT_CHATS: '/api/messages/chats',
+  CLEAR_CHATS: '/api/messages/clear',
+  MARK_READ: '/api/messages/read'
+};
+
+export const API_CONFIG = {
+  TIMEOUT: 10000, // 10秒
+  RETRY_TIMES: 3,
+  RETRY_DELAY: 1000 // 1秒
+};
+// #endregion
+
+// #region 8. Route Constants
+export const ROUTES = {
+  MESSAGE_CENTER: 'MessageCenter',
+  LIKE_COLLECT: 'LikeCollect',
+  COMMENT: 'Comment',
+  FOLLOWER: 'Follower',
+  SYSTEM_NOTIFICATION: 'SystemNotification',
+  PRIVATE_CHAT: 'PrivateChat'
+};
+
+export const NAVIGATION_PARAMS = {
+  FADE_DURATION: 250,
+  SLIDE_DURATION: 300
+};
+// #endregion

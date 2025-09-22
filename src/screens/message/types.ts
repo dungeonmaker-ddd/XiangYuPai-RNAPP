@@ -1,9 +1,20 @@
+// #region 1. File Banner & TOC
 /**
- * 消息系统模块 - 全局类型定义
+ * 消息系统模块 - 类型定义
  * 基于消息系统模块架构设计文档
+ * 
+ * TOC (快速跳转):
+ * [1] Enums
+ * [2] Base Types
+ * [3] Message Types
+ * [4] Component Props Types
+ * [5] State Types
+ * [6] API Types
+ * [7] Utility Types
  */
+// #endregion
 
-// 消息类型枚举
+// #region 2. Enums
 export enum MessageType {
   LIKE_COLLECT = 'like_collect',
   COMMENT = 'comment', 
@@ -12,7 +23,6 @@ export enum MessageType {
   PRIVATE_CHAT = 'private_chat'
 }
 
-// 消息状态枚举
 export enum MessageStatus {
   UNREAD = 'unread',
   READ = 'read',
@@ -21,14 +31,14 @@ export enum MessageStatus {
   FAILED = 'failed'
 }
 
-// 用户在线状态
 export enum OnlineStatus {
   ONLINE = 'online',
   OFFLINE = 'offline',
   AWAY = 'away'
 }
+// #endregion
 
-// 基础用户信息
+// #region 3. Base Types
 export interface User {
   id: string;
   nickname: string;
@@ -38,7 +48,14 @@ export interface User {
   signature?: string;
 }
 
-// 消息分类卡片
+export interface BaseMessage {
+  id: string;
+  timestamp: string;
+  isRead: boolean;
+}
+// #endregion
+
+// #region 4. Message Types
 export interface MessageCategory {
   id: string;
   type: MessageType;
@@ -49,7 +66,6 @@ export interface MessageCategory {
   route: string;
 }
 
-// 最近对话项
 export interface RecentChat {
   id: string;
   user: User;
@@ -63,9 +79,7 @@ export interface RecentChat {
   isMuted: boolean;
 }
 
-// 点赞收藏消息
-export interface LikeCollectMessage {
-  id: string;
+export interface LikeCollectMessage extends BaseMessage {
   user: User;
   actionType: 'like' | 'collect';
   targetContent: {
@@ -74,13 +88,9 @@ export interface LikeCollectMessage {
     title: string;
     thumbnail: string;
   };
-  timestamp: string;
-  isRead: boolean;
 }
 
-// 评论消息
-export interface CommentMessage {
-  id: string;
+export interface CommentMessage extends BaseMessage {
   user: User;
   content: string;
   targetContent: {
@@ -88,48 +98,61 @@ export interface CommentMessage {
     title: string;
     thumbnail: string;
   };
-  timestamp: string;
-  isRead: boolean;
 }
 
-// 粉丝消息
-export interface FollowerMessage {
-  id: string;
+export interface FollowerMessage extends BaseMessage {
   user: User;
   actionType: 'follow' | 'unfollow';
-  timestamp: string;
-  isRead: boolean;
   followStatus: 'following' | 'not_following' | 'mutual';
 }
 
-// 系统通知
-export interface SystemNotification {
-  id: string;
+export interface SystemNotification extends BaseMessage {
   title: string;
   content: string;
   priority: 'high' | 'medium' | 'low';
   type: 'profile' | 'system' | 'activity';
-  timestamp: string;
-  isRead: boolean;
   actions?: {
     primary?: { text: string; action: string; };
     secondary?: { text: string; action: string; };
   };
 }
 
-// 聊天消息
-export interface ChatMessage {
-  id: string;
+export interface ChatMessage extends BaseMessage {
   senderId: string;
   receiverId: string;
   content: string;
   type: 'text' | 'image' | 'voice';
-  timestamp: string;
   status: MessageStatus;
   isFromMe: boolean;
 }
+// #endregion
 
-// 聊天对话
+// #region 5. Component Props Types
+export interface MessageHeaderAreaProps {
+  onClearPress?: () => void;
+  showClearButton?: boolean;
+}
+
+export interface MessageCategoryAreaProps {
+  categories: MessageCategory[];
+  onCategoryPress: (category: MessageCategory) => void;
+}
+
+export interface RecentChatListAreaProps {
+  chats?: RecentChat[];
+  onChatPress: (chat: RecentChat) => void;
+  onClearAll?: () => void;
+}
+// #endregion
+
+// #region 6. State Types
+export interface MessageState {
+  categories: MessageCategory[];
+  recentChats: RecentChat[];
+  loading: boolean;
+  error: string | null;
+}
+
 export interface ChatConversation {
   id: string;
   user: User;
@@ -137,3 +160,36 @@ export interface ChatConversation {
   lastMessage?: ChatMessage;
   unreadCount: number;
 }
+// #endregion
+
+// #region 7. API Types
+export interface LoadMessageDataResponse {
+  categories: MessageCategory[];
+  recentChats: RecentChat[];
+}
+
+export interface MessageApiError {
+  code: string;
+  message: string;
+  details?: any;
+}
+// #endregion
+
+// #region 8. Utility Types
+export type NavigationProp = {
+  navigate: (screen: string, params?: any) => void;
+  goBack: () => void;
+};
+
+export type MessageActionType = 
+  | 'LOAD_DATA'
+  | 'REFRESH_DATA'
+  | 'CLEAR_CHATS'
+  | 'UPDATE_CATEGORY_COUNT'
+  | 'SET_ERROR';
+
+export interface MessageAction {
+  type: MessageActionType;
+  payload?: any;
+}
+// #endregion

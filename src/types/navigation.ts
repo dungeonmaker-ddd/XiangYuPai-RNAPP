@@ -23,11 +23,11 @@ export interface ScreenProps {
 }
 
 // 导入地区选择相关类型
-import type { RegionInfo, CurrentLocationInfo } from '../screens/location/types';
+import type { RegionInfo, CurrentLocationInfo } from '../screens/home-location/types';
 // 导入消息相关类型
 import type { User } from '../screens/message/types';
 // 导入发现页面相关类型
-import type { ContentItem } from '../screens/discover/types';
+import type { ContentItem } from '../screens/discover/WaterfallList/types';
 
 // 路由参数类型定义
 export type RootStackParamList = {

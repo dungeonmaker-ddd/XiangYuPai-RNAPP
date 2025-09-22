@@ -1,0 +1,24 @@
+/**
+ * ⚙️ FilterArea 常量配置
+ */
+
+export const FILTER_CONSTANTS = {
+  QUICK_FILTER_HEIGHT: 44,
+  TYPE_TABS_HEIGHT: 40,
+  FILTER_SPACING: 8,
+  MAX_VISIBLE_TABS: 6,
+} as const;
+
+export const QUICK_FILTER_CONSTANTS = {
+  SORT_BUTTON_MIN_WIDTH: 80,
+  GENDER_BUTTON_MIN_WIDTH: 70,
+  ADVANCED_BUTTON_MIN_WIDTH: 60,
+  BUTTON_HEIGHT: 32,
+} as const;
+
+export const TYPE_TAB_CONSTANTS = {
+  TAB_MIN_WIDTH: 60,
+  TAB_HEIGHT: 32,
+  TAB_SPACING: 8,
+  SCROLL_THRESHOLD: 5,
+} as const;

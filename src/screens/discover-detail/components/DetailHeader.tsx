@@ -22,7 +22,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 
 // 举报相关类型导入
-import type { ReportTargetType } from '../../report/types';
+import type { ReportTargetType } from '../../profile-report/types';
 // 导航事件处理导入
 import { createNavigationEventHandlers, type ReportNavigationParams } from '../events';
 

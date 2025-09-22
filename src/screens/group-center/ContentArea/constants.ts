@@ -1,0 +1,12 @@
+/**
+ * ⚙️ ContentArea 常量配置
+ */
+
+export const CONTENT_CONSTANTS = {
+  LIST_ITEM_HEIGHT: 200,
+  LOADING_HEIGHT: 100,
+  EMPTY_HEIGHT: 200,
+  ERROR_HEIGHT: 150,
+  REFRESH_THRESHOLD: 50,
+  LOAD_MORE_THRESHOLD: 0.3,
+} as const;

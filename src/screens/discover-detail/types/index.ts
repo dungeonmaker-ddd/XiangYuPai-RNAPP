@@ -3,7 +3,7 @@
  * 基于架构设计文档的类型系统
  */
 
-import { ContentItem, UserInfo, LocationInfo } from '../../discover/types';
+import { ContentItem, UserInfo } from '../../discover/WaterfallList/types';
 
 // 详情页面路由参数
 export interface DiscoverDetailRouteParams {

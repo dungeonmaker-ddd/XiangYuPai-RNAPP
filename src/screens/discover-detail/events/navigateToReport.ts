@@ -8,7 +8,7 @@
  */
 
 import type { NavigationProp, ParamListBase } from '@react-navigation/native';
-import type { ReportTargetType } from '../../report/types';
+import type { ReportTargetType } from '../../profile-report/types';
 
 export interface ReportNavigationParams {
   /** 举报目标ID */

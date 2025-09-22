@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
-import { ContentItem } from '../../discover/types';
+import { ContentItem } from '../../discover/WaterfallList/types';
 
 interface NavigationExampleProps {
   navigation: any;

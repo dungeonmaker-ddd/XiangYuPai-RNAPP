@@ -8,10 +8,10 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 // 导入页面组件
 import MainScreen from '../screens/MainScreen';
-import { LocationSelectorScreen } from '../screens/location';
-import { SearchScreen } from '../screens/search';
+import { LocationSelectorScreen } from '../screens/home-location';
+import { SearchScreen } from '../screens/home-search';
 import { GroupCenterScreen } from '../screens/group-center';
-import { PublishGroupScreen } from '../screens/group-center/publish';
+import { PublishGroupScreen } from '../screens/group-publish';
 import { PrivateChatScreen } from '../screens/message/private-chat';
 import { DiscoverDetailPage } from '../screens/discover-detail';
 

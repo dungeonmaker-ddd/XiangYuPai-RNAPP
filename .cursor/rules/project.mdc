@@ -2,269 +2,100 @@
 alwaysApply: true
 ---
 ??? PATH ??
-????? 00000046 64C1:D356
+????? 0000000E 64C1:D356
 C:\USERS\D\DOCUMENTS\GITHUB\XIANGYUPAI-RNAPP\SRC
-|   tree.txt
-|   
 +---globalComponents
-|       Icon.tsx
-|       index.ts
-|       
 +---navigation
-|       AppNavigator.tsx
-|       GlobalBottomNavigation.tsx
-|       index.ts
-|       
 +---screens
-|   |   DemoScreen.tsx
-|   |   index.ts
-|   |   MainScreen.tsx
-|   |   tree.txt
-|   |   
 |   +---discover
-|   |   |   DiscoverScreen.tsx
-|   |   |   
-|   |   +---TabBar
-|   |   |       constants.ts
-|   |   |       formatTabBarDisplay.ts
-|   |   |       index.tsx
-|   |   |       onTabBarPress.ts
-|   |   |       types.ts
-|   |   |       useTabBar.ts
-|   |   |       
-|   |   \---WaterfallList
-|   |       |   apiWaterfallCardLike.ts
-|   |       |   apiWaterfallContent.ts
-|   |       |   apiWaterfallPagination.ts
-|   |       |   constants.ts
-|   |       |   formatWaterfallCardDisplay.ts
-|   |       |   index.tsx
-|   |       |   navigateToContentDetail.ts
-|   |       |   onWaterfallCardClick.ts
-|   |       |   onWaterfallLikeClick.ts
-|   |       |   onWaterfallLoadMore.ts
-|   |       |   onWaterfallRefresh.ts
-|   |       |   onWaterfallUserClick.ts
-|   |       |   processWaterfallCardImage.ts
-|   |       |   types.ts
-|   |       |   useWaterfallCard.ts
-|   |       |   useWaterfallModule.ts
-|   |       |   VirtualizationManager.ts
-|   |       |   WaterfallCard.tsx
-|   |       |   WaterfallContainer.tsx
-|   |       |   WaterfallLayoutEngine.ts
-|   |       |   WaterfallList.tsx
-|   |       |   WaterfallScrollView.tsx
-|   |       |   
-|   |       \---backend
-|   |               controllerWaterfall.java
-|   |               dtoWaterfallRequest.java
-|   |               entityWaterfallContent.java
-|   |               serviceWaterfall.java
-|   |               
 |   +---discover-detail
-|   |   |   DiscoverDetailPage.tsx
-|   |   |   index.ts
-|   |   |   
 |   |   +---components
-|   |   |       CommentInput.tsx
-|   |   |       CommentList.tsx
-|   |   |       DetailHeader.tsx
-|   |   |       ImageViewer.tsx
-|   |   |       index.ts
-|   |   |       InteractionActionBarExample.tsx
-|   |   |       UserInfoCard.tsx
-|   |   |       
 |   |   +---events
-|   |   |       index.ts
-|   |   |       navigateToChat.ts
-|   |   |       navigateToDiscover.ts
-|   |   |       navigateToProfile.ts
-|   |   |       navigateToReport.ts
-|   |   |       
 |   |   +---examples
-|   |   |       DetailHeaderWithReportExample.tsx
-|   |   |       DiscoverIntegrationExample.tsx
-|   |   |       NavigationEventsExample.tsx
-|   |   |       NavigationExample.tsx
-|   |   |       UsageExample.tsx
-|   |   |       
 |   |   +---hooks
-|   |   |       index.ts
-|   |   |       useDiscoverDetail.ts
-|   |   |       
 |   |   +---services
-|   |   |       DetailDataService.ts
-|   |   |       index.ts
-|   |   |       
 |   |   \---types
-|   |           index.ts
-|   |           
 |   +---group-center
-|   |   |   constants.ts
-|   |   |   GroupCenterScreen.tsx
-|   |   |   index.ts
-|   |   |   types.ts
-|   |   |   
-|   |   +---components
-|   |   |       GroupCard.tsx
-|   |   |       index.ts
-|   |   |       
-|   |   \---publish
-|   |       |   constants.ts
-|   |       |   index.ts
-|   |       |   PublishGroupScreen.tsx
-|   |       |   types.ts
-|   |       |   
-|   |       \---components
-|   |           |   ActivityTypeSelector.tsx
-|   |           |   AgreementSettings.tsx
-|   |           |   index.ts
-|   |           |   PaymentModal.tsx
-|   |           |   PublishForm.tsx
-|   |           |   
-|   |           \---modals
-|   |                   DeadlinePickerModal.tsx
-|   |                   LocationPickerModal.tsx
-|   |                   ParticipantSetupModal.tsx
-|   |                   PricingSetupModal.tsx
-|   |                   TimePickerModal.tsx
-|   |                   
+|   |   +---ContentArea
+|   |   |   +---GroupCard
+|   |   |   +---GroupList
+|   |   |   \---LoadingStates
+|   |   +---FilterArea
+|   |   |   +---QuickFilters
+|   |   |   \---TypeTabs
+|   |   \---HeaderArea
+|   |       +---NavigationBar
+|   |       \---PublishButton
+|   +---group-publish
+|   |   +---HeaderArea
+|   |   |   +---NavigationBar
+|   |   |   \---SaveButton
+|   |   \---TypeSelectionArea
+|   |       +---TypeGrid
+|   |       \---TypeValidation
 |   +---home
-|   |   |   constants.ts
-|   |   |   HomeScreen.tsx
-|   |   |   index.ts
-|   |   |   types.ts
-|   |   |   
-|   |   \---components
-|   |           FilterTabs.tsx
-|   |           FunctionGrid.tsx
-|   |           GameBanner.tsx
-|   |           HeaderSection.tsx
-|   |           index.ts
-|   |           LimitedOffers.tsx
-|   |           TeamPartySection.tsx
-|   |           UserCard.tsx
-|   |           ???.png
-|   |           
-|   +---location
-|   |   |   constants.ts
-|   |   |   index.ts
-|   |   |   LocationSelectorScreen.tsx
-|   |   |   types.ts
-|   |   |   
-|   |   \---components
-|   |           index.ts
-|   |           
+|   |   +---FilterTabsArea
+|   |   |   +---FilterSelector
+|   |   |   \---RegionSelector
+|   |   +---FunctionGridArea
+|   |   +---GameBannerArea
+|   |   +---HeaderArea
+|   |   +---LimitedOffersArea
+|   |   +---TeamPartyArea
+|   |   \---UserListArea
+|   |       \---UserCardComponent
+|   +---home-location
+|   |   +---HeaderArea
+|   |   +---HotCitiesArea
+|   |   +---LocationRecommendArea
+|   |   \---RegionListArea
+|   |       +---AlphabetIndex
+|   |       \---RegionListItem
+|   +---home-search
+|   |   +---SearchHeaderArea
+|   |   +---SearchHistoryArea
+|   |   +---SearchInputArea
+|   |   +---SearchResultsArea
+|   |   |   \---AllResultsView
+|   |   |       \---ContentCard
+|   |   +---SearchSuggestionsArea
+|   |   \---SearchTabsArea
 |   +---message
-|   |   |   constants.ts
-|   |   |   index.ts
-|   |   |   MessageCenterScreen.tsx
-|   |   |   types.ts
-|   |   |   
 |   |   +---components
 |   |   |   +---functionBtn
 |   |   |   \---title
-|   |   |           ??.png
-|   |   |           
-|   |   +---like-collect
-|   |   |   \---components
-|   |   |           index.ts
-|   |   |           LikeCollectItem.tsx
-|   |   |           
-|   |   \---private-chat
-|   |       |   index.ts
-|   |       |   PrivateChatScreen.tsx
-|   |       |   
-|   |       +---components
-|   |       |       ChatHeader.tsx
-|   |       |       index.ts
-|   |       |       InputArea.tsx
-|   |       |       MessageBubble.example.tsx
-|   |       |       MessageBubble.tsx
-|   |       |       MessageList.tsx
-|   |       |       
-|   |       \---pchat
-|   |               ???.png
-|   |               ????.png
-|   |               ?????.png
-|   |               ????.png
-|   |               
-|   +---profile
-|   |   |   constants.ts
-|   |   |   index.ts
-|   |   |   ProfileScreen.tsx
-|   |   |   types.ts
-|   |   |   
+|   |   +---MessageCategoryArea
+|   |   +---MessageHeaderArea
+|   |   \---RecentChatListArea
+|   +---message-like-collect
 |   |   \---components
-|   |       |   FunctionGrid.tsx
-|   |       |   index.ts
-|   |       |   LayoutCard.tsx
-|   |       |   SkeletonLoader.tsx
-|   |       |   TitleIconButton.tsx
-|   |       |   TransactionSection.tsx
-|   |       |   UserHeader.tsx
-|   |       |   
-|   |       +---fuction
-|   |       |       ????.png
-|   |       |       ??.png
-|   |       |       ??.png
-|   |       |       ??.png
-|   |       |       ????.png
-|   |       |       ??.png
-|   |       |       ??.png
-|   |       |       
-|   |       +---transaction
-|   |       |       ????.png
-|   |       |       ????.png
-|   |       |       ????.png
-|   |       |       ????.png
-|   |       |       
-|   |       \---userhead
-|   |               ????.png
-|   |               
-|   +---report
-|   |   |   constants.ts
-|   |   |   index.ts
-|   |   |   ReportScreen.tsx
-|   |   |   types.ts
-|   |   |   
+|   +---message-private-chat
 |   |   +---components
-|   |   |       ImageUploader.tsx
-|   |   |       index.ts
-|   |   |       ReportDescriptionInput.tsx
-|   |   |       ReportTypeSelector.tsx
-|   |   |       SubmitConfirmModal.tsx
-|   |   |       
-|   |   +---events
-|   |   |       index.ts
-|   |   |       onDescriptionChange.ts
-|   |   |       onImageUpload.ts
-|   |   |       onReportSubmit.ts
-|   |   |       onReportTypeSelect.ts
-|   |   |       
-|   |   +---hooks
-|   |   |       index.ts
-|   |   |       useReportData.ts
-|   |   |       
-|   |   \---services
-|   |           index.ts
-|   |           ReportService.ts
-|   |           
-|   \---search
-|       |   constants.ts
-|       |   index.ts
-|       |   SearchScreen.tsx
-|       |   types.ts
-|       |   utils.ts
-|       |   
-|       \---components
-|               index.ts
-|               SearchHistory.tsx
-|               SearchInput.tsx
-|               SearchSuggestions.tsx
-|               SearchTabs.tsx
-|               
+|   |   \---pchat
+|   +---profile
+|   |   +---SharedComponents
+|   |   |   \---SkeletonLoader
+|   |   +---ToolsArea
+|   |   +---TransactionArea
+|   |   |   +---FunctionButton
+|   |   |   \---LayoutCard
+|   |   \---UserInfoArea
+|   |       \---userhead
+|   \---profile-report
+|       +---DescriptionInputArea
+|       |   \---CharacterCounter
+|       +---events
+|       +---hooks
+|       +---ImageUploadArea
+|       |   +---AddImageButton
+|       |   +---ImageItem
+|       |   |   \---DeleteButton
+|       |   \---ImageSourcePicker
+|       +---services
+|       +---SharedComponents
+|       |   \---SubmitConfirmModal
+|       |       +---ModalButton
+|       |       \---ModalOverlay
+|       \---TypeSelectionArea
+|           \---TypeCard
 \---types
-        navigation.ts
-        

@@ -16,7 +16,7 @@ import {
   ScrollView,
 } from 'react-native';
 import { UserInfoCardProps } from '../types';
-import { UserInfo } from '../../discover/types';
+import { UserInfo } from '../../discover/WaterfallList/types';
 // #endregion
 
 // #region 2. Types & Props Extensions

@@ -5,8 +5,8 @@
 
 import React from 'react';
 import { TouchableOpacity, StyleSheet } from 'react-native';
-import { ContentItem } from '../../discover/types';
-import { WaterfallCard } from '../../discover/components';
+import { ContentItem } from '../../discover/WaterfallList/types';
+import { WaterfallCard } from '../../discover/WaterfallList';
 
 interface DiscoverIntegrationExampleProps {
   navigation: any;

@@ -14,6 +14,11 @@ export interface UserCard {
   lastActive?: number;
   rating?: number;
   reviewCount?: number;
+  // 扩展字段
+  isSpecialOffer?: boolean;
+  orderCount?: number;
+  displayService?: string;
+  listIndex?: number;
 }
 
 export interface FunctionItem {
@@ -22,6 +27,7 @@ export interface FunctionItem {
   icon: string;
   color: string;
   isHot?: boolean;
+  iconSource?: any; // PNG图标源
 }
 
 export interface LocationInfo {

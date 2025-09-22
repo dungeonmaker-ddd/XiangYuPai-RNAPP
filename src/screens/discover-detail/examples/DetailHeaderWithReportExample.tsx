@@ -17,7 +17,7 @@ import {
 import { useNavigation, useRoute } from '@react-navigation/native';
 
 import DetailHeader from '../components/DetailHeader';
-import type { ReportTargetType } from '../../report/types';
+import type { ReportTargetType } from '../../profile-report/types';
 // #endregion
 
 // #region [2] Types
