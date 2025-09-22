@@ -1,4 +1,4 @@
-# 通用组件模块化架构核心标准
+# 通用组件模块化架构核心标准 v2.2
 
 ## 🤖 Agent 执行指令
 
@@ -6,11 +6,14 @@
 
 ### 🎯 强制执行规则
 
-1. **📁 嵌套化主导架构**
-   - 组件位置：`src/screens/{PageName}/{ComponentName}/`
-   - 默认嵌套化架构，支持多组件页面
+1. **📁 层级化页面组主导架构**
+   - 页面组位置：`src/pages/{PageGroupName}/`
+   - 主页面位置：`src/pages/{PageGroupName}/MainPage/`
+   - 子页面位置：`src/pages/{PageGroupName}/{SubFunction}Page/`
+   - 组件位置：`src/pages/{PageGroupName}/{PageType}Page/{ComponentName}/`
+   - 默认嵌套化架构，支持页面组内多页面管理
    - 移除 `components/` 中间层级
-   - 页面级统一管理状态和导航
+   - 页面组级统一管理状态和导航
 
 2. **🔧 完整结构要求**
    - 核心文件必需：`index.[ext]`、`types.[ext]`、`constants.[ext]`、`README.md`
@@ -23,127 +26,123 @@
    - 禁止命名不规范
    - 禁止常量硬编码
 
-## 🏗️ 页面父组件集成架构
+## 🏗️ 层级化页面组集成架构
 
 ```
-src/screens/                                        # 页面容器层
-├── {PageName}/                                     # 具名页面 (如 discover, home, profile)
-│   ├── index.[ext]                                 # 📱 页面父组件 - 集成所有子组件
-│   ├── types.[ext]                                 # 📋 页面类型定义 - 导出所有相关类型
-│   ├── constants.[ext]                             # ⚙️ 页面常量配置 - 导出所有相关常量
-│   ├── README.md                                   # 📖 页面文档 - 包含所有组件说明
+src/pages/                                          # 页面容器层
+├── {PageGroupName}/                                # 📦 页面组 (主功能模块，如 UserProfile, ProductCatalog)
+│   ├── index.[ext]                                 # 🏠 页面组入口 - 导出所有页面组件
+│   ├── types.[ext]                                 # 📋 页面组类型定义 - 导出所有相关类型
+│   ├── constants.[ext]                             # ⚙️ 页面组常量配置 - 导出所有相关常量
+│   ├── README.md                                   # 📖 页面组文档 - 包含所有页面说明
 │   │
-│   ├── 🔄 页面状态管理层 (统一管理)
-│   │   ├── use{PageName}.[ext]                     # 页面主状态管理
-│   │   ├── use{PageName}Form.[ext]                 # 页面表单状态管理
-│   │   └── use{PageName}Data.[ext]                 # 页面数据状态管理
+│   ├── 🏠 主页面层 (Main Page)
+│   │   ├── MainPage/                               # 📱 主页面组件 - 页面组的主入口
+│   │   │   ├── index.[ext]                         # 主页面实现
+│   │   │   ├── types.[ext]                         # 主页面类型定义
+│   │   │   ├── constants.[ext]                     # 主页面常量配置
+│   │   │   ├── README.md                           # 主页面文档
+│   │   │   │
+│   │   │   ├── {ComponentAreaName1}/               # ✅ 组件区域1 - 顶部布局区域
+│   │   │   │   ├── index.[ext]                     # 主组件文件
+│   │   │   │   ├── types.[ext]                     # 组件类型定义 (可选)
+│   │   │   │   ├── constants.[ext]                 # 组件常量配置 (可选)
+│   │   │   │   ├── README.md                       # 组件文档
+│   │   │   │   │
+│   │   │   │   ├── {FunctionAreaName1}/            # 🔸 功能区域1 - 复杂的逻辑，嵌套实现
+│   │   │   │   │   ├── index.[ext]                 # 区域主文件
+│   │   │   │   │   ├── types.[ext]                 # 区域类型定义 (可选)
+│   │   │   │   │   ├── constants.[ext]             # 区域常量 (可选)
+│   │   │   │   │   ├── use[LocalState].[ext]       # 区域本地状态
+│   │   │   │   │   ├── on[Action].[ext]            # 区域事件处理
+│   │   │   │   │   ├── api[Action].[ext]           # 区域API接口
+│   │   │   │   │   ├── process[Data].[ext]         # 数据处理
+│   │   │   │   │   └── utils[Function].[ext]       # 工具函数
+│   │   │   │   │
+│   │   │   │   ├── {FunctionAreaName2}/            # 🟢 功能区域2 - 扁平实现
+│   │   │   │   │   ├── index.[ext]                 # 区域主文件
+│   │   │   │   │   ├── constants.[ext]             # 区域常量
+│   │   │   │   │   ├── processData.[ext]           # 数据处理
+│   │   │   │   │   └── utilsDisplay.[ext]          # 显示工具
+│   │   │   │   │
+│   │   │   │   └── {FunctionAreaName3}/            # 🔸 功能区域3 - 复杂交互，嵌套实现
+│   │   │   │       ├── index.[ext]                 # 区域主文件
+│   │   │   │       ├── use[LocalState].[ext]       # 区域本地状态
+│   │   │   │       ├── on[Action].[ext]            # 区域事件处理
+│   │   │   │       ├── processLogic.[ext]          # 逻辑处理
+│   │   │   │       └── utilsHelper.[ext]           # 辅助工具
+│   │   │   │
+│   │   │   ├── {ComponentAreaName2}/               # ✅ 组件区域2 - 主要内容区域
+│   │   │   └── {ComponentAreaName3}/               # ✅ 组件区域3 - 操作交互区域
+│   │   │
+│   │   ├── 🔄 页面组状态管理层 (统一管理)
+│   │   │   ├── use{PageGroup}.[ext]                # 页面组主状态管理
+│   │   │   ├── use{PageGroup}Data.[ext]            # 页面组数据状态管理
+│   │   │   └── use{PageGroup}Flow.[ext]            # 页面组流程状态管理
+│   │   │
+│   │   └── 🧭 页面组导航层 (统一管理)
+│   │       ├── navigate{PageGroup}Flow.[ext]       # 页面组内导航流程
+│   │       ├── navigateToSubPages.[ext]            # 子页面导航
+│   │       └── navigateBack{PageGroup}.[ext]       # 返回导航
 │   │
-│   ├── 🧭 页面导航层 (统一管理)
-│   │   ├── navigateTo[Target].[ext]                # 页面跳转导航
-│   │   ├── navigateBack[Source].[ext]              # 返回导航
-│   │   └── navigate{PageName}Flow.[ext]            # 流程导航
+│   ├── 📄 子页面层 (Sub Pages) - 最多10个相关页面
+│   │   ├── {SubFunction1}Page/                     # 🎯 子功能页面1 - 如详情展示、数据查看等
+│   │   │   ├── index.[ext]                         # 子功能页实现
+│   │   │   ├── types.[ext]                         # 子功能页类型定义
+│   │   │   ├── constants.[ext]                     # 子功能页常量配置
+│   │   │   ├── README.md                           # 子功能页文档
+│   │   │   │
+│   │   │   ├── {ComponentAreaName1}/               # ✅ 子功能页组件区域1
+│   │   │   └── {ComponentAreaName2}/               # ✅ 子功能页组件区域2
+│   │   │
+│   │   ├── {SubFunction2}Page/                     # 🎯 子功能页面2 - 如表单输入、数据编辑等
+│   │   │   ├── index.[ext]                         # 子功能页实现
+│   │   │   ├── types.[ext]                         # 子功能页类型定义
+│   │   │   ├── constants.[ext]                     # 子功能页常量配置
+│   │   │   ├── README.md                           # 子功能页文档
+│   │   │   │
+│   │   │   ├── {ComponentAreaName1}/               # ✅ 子功能页组件区域1
+│   │   │   ├── {ComponentAreaName2}/               # ✅ 子功能页组件区域2
+│   │   │   └── {ComponentAreaName3}/               # ✅ 子功能页组件区域3
+│   │   │
+│   │   ├── {SubFunction3}Page/                     # 🎯 子功能页面3 - 如列表管理、搜索筛选等
+│   │   ├── {SubFunction4}Page/                     # 🎯 子功能页面4 - 如设置配置、偏好管理等
+│   │   ├── {SubFunction5}Page/                     # 🎯 子功能页面5 - 如操作处理、状态变更等
+│   │   ├── {SubFunction...}Page/                   # 🎯 更多子功能页面 - 根据业务需要定义
+│   │   └── ...                                     # 最多10个子页面
 │   │
-│   ├── {ComponentAreaName1}/                       # ✅ 组件区域1 - 顶部布局区域
-│   │   ├── index.[ext]                             # 主组件文件
-│   │   ├── types.[ext]                             # 组件类型定义 (可选)
-│   │   ├── constants.[ext]                         # 组件常量配置 (可选)
-│   │   ├── README.md                               # 组件文档
-│   │   │
-│   │   ├── {FunctionAreaName1}/                    # 🔸 功能区域1 - 复杂的逻辑，嵌套实现
-│   │   │   ├── index.[ext]                         # 区域主文件
-│   │   │   ├── types.[ext]                         # 区域类型定义 (可选)
-│   │   │   ├── constants.[ext]                     # 区域常量 (可选)
-│   │   │   ├── use[LocalState].[ext]               # 区域本地状态
-│   │   │   ├── on[Action].[ext]                    # 区域事件处理
-│   │   │   ├── api[Action].[ext]                   # 区域API接口
-│   │   │   ├── process[Data].[ext]                 # 数据处理
-│   │   │   └── utils[Function].[ext]               # 工具函数
-│   │   │
-│   │   ├── {FunctionAreaName2}/                    # 🟢 功能区域2 扁平实现
-│   │   │   ├── index.[ext]                         # 区域主文件
-│   │   │   ├── constants.[ext]                     # 区域常量
-│   │   │   ├── processData.[ext]                   # 数据处理
-│   │   │   └── utilsDisplay.[ext]                  # 显示工具
-│   │   │
-│   │   └── {FunctionAreaName3}/                    # 🔸 功能区域3 复杂交互，嵌套实现
-│   │       ├── index.[ext]                         # 区域主文件
-│   │       ├── use[LocalState].[ext]               # 区域本地状态
-│   │       ├── on[Action].[ext]                    # 区域事件处理
-│   │       ├── processLogic.[ext]                  # 逻辑处理
-│   │       └── utilsHelper.[ext]                   # 辅助工具
-│   │
-│   ├── {ComponentAreaName2}/                       # ✅ 组件区域2 - 主要内容区域
-│   │   ├── index.[ext]                             # 主组件文件
-│   │   ├── types.[ext]                             # 组件类型定义 (可选)
-│   │   ├── constants.[ext]                         # 组件常量配置 (可选)
-│   │   ├── README.md                               # 组件文档
-│   │   │
-│   │   ├── {FunctionAreaName1}/                    # 🔸 功能区域1 - 复杂布局才需要，嵌套实现
-│   │   │   ├── index.[ext]                         # 区域主文件
-│   │   │   ├── processContent.[ext]                # 内容处理
-│   │   │   └── utilsFormat.[ext]                   # 格式化工具
-│   │   │
-│   │   ├── {FunctionAreaName2}/                    # 🟢 功能区域2 - 展示卡片扁平实现
-│   │   │   ├── index.[ext]                         # 区域主文件
-│   │   │   └── utilsSimple.[ext]                   # 简单工具
-│   │   │
-│   │   ├── {FunctionAreaName3}/                    # 🔸 功能区域3 - 复杂处理逻辑，嵌套实现
-│   │   │   ├── index.[ext]                         # 区域主文件
-│   │   │   ├── processData.[ext]                   # 数据处理
-│   │   │   └── utilsDisplay.[ext]                  # 显示工具
-│   │   │
-│   │   └── {FunctionAreaName4}/                    # 🟢 功能区域4 - 简单展示模块，扁平实现
-│   │       ├── index.[ext]                         # 区域主文件
-│   │       └── utilsHelper.[ext]                   # 辅助工具
-│   │
-│   ├── {ComponentAreaName3}/                       # ✅ 组件区域3 - 操作交互区域
-│   │   ├── index.[ext]                             # 主组件文件
-│   │   ├── types.[ext]                             # 组件类型定义 (可选)
-│   │   ├── constants.[ext]                         # 组件常量配置 (可选)
-│   │   ├── README.md                               # 组件文档
-│   │   │
-│   │   ├── {FunctionAreaName1}/                    # 🔸 功能区域1 - 复杂逻辑，嵌套实现
-│   │   │   ├── index.[ext]                         # 区域主文件
-│   │   │   ├── on[Action].[ext]                    # 交互事件
-│   │   │   ├── processInteraction.[ext]            # 交互处理
-│   │   │   └── utilsAnimation.[ext]                # 动画工具
-│   │   │
-│   │   └── {FunctionAreaName2}/                    # 🟢 功能区域2 - 简单操作，扁平实现
-│   │       ├── index.[ext]                         # 区域主文件
-│   │       └── utilsAnimation.[ext]                # 动画工具
-│   │
-│   ├── {ComponentAreaName4}/                       # ✅ 组件区域4 - 其他功能区域
-│   ├── {ComponentAreaName...}/                     # ✅ 更多组件区域 - 根据页面需要动态添加
-│   │
-│   ├── 🌐 页面API层 (配套实施 - 与后端交互层同时出现)
-│   │   ├── api{PageName}[Action].[ext]             # 页面级API接口
-│   │   └── api{PageName}Aggregate.[ext]            # 聚合API接口
+│   ├── 🌐 页面组API层 (配套实施 - 与后端交互层同时出现)
+│   │   ├── api{PageGroup}Main.[ext]                # 主页面API接口
+│   │   ├── api{PageGroup}[SubFunction].[ext]       # 子功能页面API接口
+│   │   └── api{PageGroup}Aggregate.[ext]           # 聚合API接口
 │   │
 │   ├── 🔌 后端交互层 (配套实施)
 │   │   └── backend/                                # 后端代码文件夹
-│   │       ├── entity{PageName}.[ext]              # 实体类
-│   │       ├── dto{PageName}[Action].[ext]         # 数据传输对象
-│   │       ├── controller{PageName}.[ext]          # 控制器
-│   │       ├── service{PageName}.[ext]             # 业务服务
-│   │       ├── mapper{PageName}.[ext]              # 数据访问 (可选)
-│   │       └── sql{PageName}.xml                   # 复杂SQL (可选)
+│   │       ├── entity{PageGroup}.[ext]             # 实体类
+│   │       ├── dto{PageGroup}[Action].[ext]        # 数据传输对象
+│   │       ├── controller{PageGroup}.[ext]         # 控制器
+│   │       ├── service{PageGroup}.[ext]            # 业务服务
+│   │       ├── mapper{PageGroup}.[ext]             # 数据访问 (可选)
+│   │       └── sql{PageGroup}.xml                  # 复杂SQL (可选)
 │   │
-│   ├── 🔄 页面数据处理层 (按需实施)
-│   │   ├── process{PageName}Data.[ext]             # 页面数据处理
-│   │   ├── processAggregateData.[ext]              # 聚合数据处理
+│   ├── 🔄 页面组数据处理层 (按需实施)
+│   │   ├── process{PageGroup}Data.[ext]            # 页面组数据处理
+│   │   ├── processSharedLogic.[ext]                # 共享逻辑处理
 │   │   └── processValidation.[ext]                 # 数据验证处理
 │   │
-│   └── 🛠️ 页面工具层 (按需实施)
-│       ├── utils{PageName}Display.[ext]            # 页面显示工具
-│       ├── utilsCoordination.[ext]                 # 组件协调工具
-│       └── utilsGlobal.[ext]                       # 全局工具函数
+│   └── 🛠️ 页面组工具层 (按需实施)
+│       ├── utils{PageGroup}Display.[ext]           # 页面组显示工具
+│       ├── utilsSharedHelper.[ext]                 # 共享辅助工具
+│       └── utilsNavigation.[ext]                   # 导航工具
 ```
 
 ### 💡 架构说明
 
-- **📱 页面父组件**: 负责集成和协调所有子组件
-- **🔄 页面状态管理**: 统一管理页面级状态，子组件只管理简单本地状态
-- **🧭 页面导航**: 统一管理页面级导航
+- **📦 页面组**: 主功能模块，包含最多10个相关页面
+- **📱 主页面**: 页面组的主入口，负责集成和协调所有子组件
+- **📄 子页面**: `{SubFunction}Page/` 通用化命名，根据具体业务功能定义
+- **🔄 页面组状态管理**: 统一管理页面组级状态，子组件只管理简单本地状态
+- **🧭 页面组导航**: 统一管理页面组级导航
 - **✅ ComponentAreaName**: 使用通用的组件区域命名，通过注释详细描述具体的布局功能和职责
 - **🔸🟢 FunctionAreaName**: 使用通用的功能区域命名，通过注释详细描述具体的业务功能、实现复杂度和技术细节
 
@@ -157,12 +156,21 @@ src/screens/                                        # 页面容器层
 | **常量定义** | `constants.[ext]` | 组件相关的常量配置 |
 | **组件文档** | `README.md` | 组件使用说明和API文档 |
 
+### 📁 页面组命名
+|| 层级类型 | 命名格式 | 示例 | 说明 |
+||---------|---------|------|------|
+|| **页面组** | `{PageGroupName}/` | `UserProfile/`, `ProductCatalog/` | 主功能模块，最多10个相关页面 |
+|| **主页面** | `MainPage/` | `MainPage/` | 固定命名，页面组的主入口 |
+|| **子功能页面** | `{SubFunction}Page/` | `DetailPage/`, `FormPage/`, `EditPage/` | 通用化子功能页面命名 |
+|| **通用示例** | `{SubFunction}Page/` | `ReportPage/`, `SharePage/`, `SettingsPage/` | 根据具体业务功能定义 |
+
 ### 🔄 状态管理
 | 功能类型 | 命名格式 | 示例 |
 |---------|---------|------|
-| **页面状态** | `use{PageName}.[ext]` | `useDiscover.[ext]` |
-| **表单状态** | `use{PageName}Form.[ext]` | `useDiscoverForm.[ext]` |
-| **数据状态** | `use{PageName}Data.[ext]` | `useDiscoverData.[ext]` |
+| **页面组状态** | `use{PageGroup}.[ext]` | `useUserProfile.[ext]` |
+| **页面组数据** | `use{PageGroup}Data.[ext]` | `useUserProfileData.[ext]` |
+| **页面组流程** | `use{PageGroup}Flow.[ext]` | `useUserProfileFlow.[ext]` |
+| **子功能页状态** | `use{SubFunction}.[ext]` | `useDetail.[ext]`, `useForm.[ext]`, `useReport.[ext]` |
 | **本地状态** | `use[LocalState].[ext]` | `useToggle.[ext]` |
 
 ### 🎯 事件处理
@@ -174,15 +182,17 @@ src/screens/                                        # 页面容器层
 ### 🧭 导航处理
 | 导航类型 | 命名格式 | 示例 |
 |---------|---------|------|
-| **页面跳转** | `navigateTo[Target].[ext]` | `navigateToProfile.[ext]` |
-| **返回导航** | `navigateBack[Source].[ext]` | `navigateBack.[ext]` |
-| **流程导航** | `navigate{PageName}Flow.[ext]` | `navigateDiscoverFlow.[ext]` |
+| **页面组内导航** | `navigate{PageGroup}Flow.[ext]` | `navigateUserProfileFlow.[ext]` |
+| **子页面导航** | `navigateToSubPages.[ext]` | `navigateToSubPages.[ext]` |
+| **具体页面导航** | `navigateTo{SubFunction}.[ext]` | `navigateToDetail.[ext]`, `navigateToForm.[ext]` |
+| **返回导航** | `navigateBack{PageGroup}.[ext]` | `navigateBackUserProfile.[ext]` |
 
 ### 🌐 API接口
 | 接口类型 | 命名格式 | 示例 |
 |---------|---------|------|
-| **基础接口** | `api[Action].[ext]` | `apiFetch.[ext]` |
-| **页面接口** | `api{PageName}[Action].[ext]` | `apiDiscoverFetch.[ext]` |
+| **主页面API** | `api{PageGroup}Main.[ext]` | `apiUserProfileMain.[ext]` |
+| **子功能页API** | `api{PageGroup}[SubFunction].[ext]` | `apiUserProfileDetail.[ext]`, `apiUserProfileForm.[ext]` |
+| **聚合API** | `api{PageGroup}Aggregate.[ext]` | `apiUserProfileAggregate.[ext]` |
 
 ### 🔄 数据处理 (简化前缀)
 | 处理类型 | 命名格式 | 示例 |
@@ -297,10 +307,10 @@ src/screens/                                        # 页面容器层
 ## 🎯 核心原则
 
 ### 🏗️ 架构原则
-1. **嵌套化主导** - 所有组件默认嵌套化架构
+1. **层级化页面组主导** - 所有页面按页面组层级化架构
 2. **移除中间层** - 禁止使用 `components/` 中间层级
-3. **多组件并存** - 页面支持多个复杂组件并存
-4. **统一标准** - 所有组件按完整架构实施
+3. **多页面并存** - 页面组支持多个相关页面并存
+4. **统一标准** - 所有页面组按完整架构实施
 5. **功能区域导向** - 根据UI功能区域进行模块划分
 
 ### 💻 实施原则  
@@ -310,7 +320,7 @@ src/screens/                                        # 页面容器层
 
 ---
 
-**版本**: 2.0.0  
+**版本**: 2.2.0  
 **更新日期**: 2024年  
 **适用范围**: 所有现代前端框架和编程语言  
 **维护者**: 架构团队
