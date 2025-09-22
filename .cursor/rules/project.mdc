@@ -2,100 +2,109 @@
 alwaysApply: true
 ---
 ??? PATH ??
-????? 0000000E 64C1:D356
+????? 0000009D 64C1:D356
 C:\USERS\D\DOCUMENTS\GITHUB\XIANGYUPAI-RNAPP\SRC
 +---globalComponents
 +---navigation
++---pages
+|   +---Discover
+|   |   +---DetailPage
+|   |   |   +---CommentInputArea
+|   |   |   +---CommentListArea
+|   |   |   +---DetailHeaderArea
+|   |   |   +---events
+|   |   |   +---examples
+|   |   |   +---hooks
+|   |   |   +---ImageViewerArea
+|   |   |   +---services
+|   |   |   +---types
+|   |   |   \---UserInfoCardArea
+|   |   \---MainPage
+|   +---GroupCenter
+|   |   +---MainPage
+|   |   |   +---ContentArea
+|   |   |   +---FilterArea
+|   |   |   \---HeaderArea
+|   |   |       +---NavigationBar
+|   |   |       \---PublishButton
+|   |   \---PublishPage
+|   |       +---HeaderArea
+|   |       |   +---NavigationBar
+|   |       |   \---SaveButton
+|   |       \---TypeSelectionArea
+|   |           +---TypeGrid
+|   |           \---TypeValidation
+|   +---Home
+|   |   +---LocationPage
+|   |   |   +---HeaderArea
+|   |   |   +---HotCitiesArea
+|   |   |   +---LocationRecommendArea
+|   |   |   \---RegionListArea
+|   |   |       +---AlphabetIndex
+|   |   |       \---RegionListItem
+|   |   +---MainPage
+|   |   |   +---FilterTabsArea
+|   |   |   +---FunctionGridArea
+|   |   |   +---GameBannerArea
+|   |   |   +---HeaderArea
+|   |   |   +---LimitedOffersArea
+|   |   |   +---TeamPartyArea
+|   |   |   \---UserListArea
+|   |   |       \---UserCardComponent
+|   |   \---SearchPage
+|   |       +---SearchHeaderArea
+|   |       +---SearchHistoryArea
+|   |       +---SearchInputArea
+|   |       +---SearchResultsArea
+|   |       |   \---AllResultsView
+|   |       |       \---ContentCard
+|   |       +---SearchSuggestionsArea
+|   |       \---SearchTabsArea
+|   +---Main
+|   +---Message
+|   |   +---LikeCollectPage
+|   |   |   \---LikeCollectItemArea
+|   |   +---MainPage
+|   |   |   +---components
+|   |   |   +---MessageCategoryArea
+|   |   |   +---MessageHeaderArea
+|   |   |   \---RecentChatListArea
+|   |   \---PrivateChatPage
+|   |       +---ChatHeaderArea
+|   |       +---components
+|   |       +---InputArea
+|   |       +---MessageBubbleArea
+|   |       +---MessageListArea
+|   |       \---pchat
+|   \---Profile
+|       +---MainPage
+|       |   +---SharedComponents
+|       |   |   \---SkeletonLoader
+|       |   +---ToolsArea
+|       |   +---TransactionArea
+|       |   |   +---FunctionButton
+|       |   |   |   +---function
+|       |   |   |   \---transaction
+|       |   |   \---LayoutCard
+|       |   \---UserInfoArea
+|       |       \---userhead
+|       \---ReportPage
+|           +---DescriptionInputArea
+|           |   \---CharacterCounter
+|           +---events
+|           +---hooks
+|           +---ImageUploadArea
+|           |   +---AddImageButton
+|           |   +---ImageItem
+|           |   |   \---DeleteButton
+|           |   \---ImageSourcePicker
+|           +---services
+|           +---SharedComponents
+|           |   \---SubmitConfirmModal
+|           |       +---ModalButton
+|           |       \---ModalOverlay
+|           \---TypeSelectionArea
+|               \---TypeCard
 +---screens
-|   +---discover
-|   +---discover-detail
-|   |   +---components
-|   |   +---events
-|   |   +---examples
-|   |   +---hooks
-|   |   +---services
-|   |   \---types
-|   +---group-center
-|   |   +---ContentArea
-|   |   |   +---GroupCard
-|   |   |   +---GroupList
-|   |   |   \---LoadingStates
-|   |   +---FilterArea
-|   |   |   +---QuickFilters
-|   |   |   \---TypeTabs
-|   |   \---HeaderArea
-|   |       +---NavigationBar
-|   |       \---PublishButton
-|   +---group-publish
-|   |   +---HeaderArea
-|   |   |   +---NavigationBar
-|   |   |   \---SaveButton
-|   |   \---TypeSelectionArea
-|   |       +---TypeGrid
-|   |       \---TypeValidation
-|   +---home
-|   |   +---FilterTabsArea
-|   |   |   +---FilterSelector
-|   |   |   \---RegionSelector
-|   |   +---FunctionGridArea
-|   |   +---GameBannerArea
-|   |   +---HeaderArea
-|   |   +---LimitedOffersArea
-|   |   +---TeamPartyArea
-|   |   \---UserListArea
-|   |       \---UserCardComponent
-|   +---home-location
-|   |   +---HeaderArea
-|   |   +---HotCitiesArea
-|   |   +---LocationRecommendArea
-|   |   \---RegionListArea
-|   |       +---AlphabetIndex
-|   |       \---RegionListItem
-|   +---home-search
-|   |   +---SearchHeaderArea
-|   |   +---SearchHistoryArea
-|   |   +---SearchInputArea
-|   |   +---SearchResultsArea
-|   |   |   \---AllResultsView
-|   |   |       \---ContentCard
-|   |   +---SearchSuggestionsArea
-|   |   \---SearchTabsArea
-|   +---message
-|   |   +---components
-|   |   |   +---functionBtn
-|   |   |   \---title
-|   |   +---MessageCategoryArea
-|   |   +---MessageHeaderArea
-|   |   \---RecentChatListArea
-|   +---message-like-collect
-|   |   \---components
-|   +---message-private-chat
-|   |   +---components
-|   |   \---pchat
-|   +---profile
-|   |   +---SharedComponents
-|   |   |   \---SkeletonLoader
-|   |   +---ToolsArea
-|   |   +---TransactionArea
-|   |   |   +---FunctionButton
-|   |   |   \---LayoutCard
-|   |   \---UserInfoArea
-|   |       \---userhead
-|   \---profile-report
-|       +---DescriptionInputArea
-|       |   \---CharacterCounter
-|       +---events
-|       +---hooks
-|       +---ImageUploadArea
-|       |   +---AddImageButton
-|       |   +---ImageItem
-|       |   |   \---DeleteButton
-|       |   \---ImageSourcePicker
-|       +---services
-|       +---SharedComponents
-|       |   \---SubmitConfirmModal
-|       |       +---ModalButton
-|       |       \---ModalOverlay
-|       \---TypeSelectionArea
-|           \---TypeCard
+|   \---discover
 \---types

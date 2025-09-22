@@ -7,13 +7,13 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 // 导入页面组件
-import MainScreen from '../screens/MainScreen';
-import { LocationSelectorScreen } from '../screens/home-location';
-import { SearchScreen } from '../screens/home-search';
-import { GroupCenterScreen } from '../screens/group-center';
-import { PublishGroupScreen } from '../screens/group-publish';
-import { PrivateChatScreen } from '../screens/message/private-chat';
-import { DiscoverDetailPage } from '../screens/discover-detail';
+import { MainPage } from '../pages/Main';
+import { HomeLocationPage } from '../pages/Home';
+import { HomeSearchPage } from '../pages/Home';
+import { GroupCenterMainPage } from '../pages/GroupCenter';
+import { GroupCenterPublishPage } from '../pages/GroupCenter';
+import { PrivateChatScreen } from '../pages/Message/PrivateChatPage';
+import { DiscoverDetailPage } from '../pages/Discover/DetailPage';
 
 // 导入类型定义
 import type { RootStackParamList } from '../types/navigation';
@@ -32,7 +32,7 @@ const AppNavigator: React.FC = () => {
         {/* 主屏幕 - 包含标签页导航 */}
         <Stack.Screen 
           name="Main" 
-          component={MainScreen}
+          component={MainPage}
           options={{
             headerShown: false,
           }}
@@ -41,7 +41,7 @@ const AppNavigator: React.FC = () => {
         {/* 地区选择页面 */}
         <Stack.Screen 
           name="LocationSelector" 
-          component={LocationSelectorScreen}
+          component={HomeLocationPage}
           options={{
             headerShown: false,
             presentation: 'modal', // 模态展示
@@ -51,7 +51,7 @@ const AppNavigator: React.FC = () => {
         {/* 搜索页面 */}
         <Stack.Screen 
           name="Search" 
-          component={SearchScreen}
+          component={HomeSearchPage}
           options={{
             headerShown: false,
             animation: 'slide_from_right', // 从右侧滑入
@@ -61,7 +61,7 @@ const AppNavigator: React.FC = () => {
         {/* 组局中心页面 */}
         <Stack.Screen 
           name="GroupCenter" 
-          component={GroupCenterScreen}
+          component={GroupCenterMainPage}
           options={{
             headerShown: false,
             animation: 'slide_from_right', // 从右侧滑入
@@ -71,7 +71,7 @@ const AppNavigator: React.FC = () => {
         {/* 组局发布页面 */}
         <Stack.Screen 
           name="PublishGroup" 
-          component={PublishGroupScreen}
+          component={GroupCenterPublishPage}
           options={{
             headerShown: false,
             presentation: 'modal', // 模态展示
