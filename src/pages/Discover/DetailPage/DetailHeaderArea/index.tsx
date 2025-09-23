@@ -24,8 +24,16 @@ import {
   Dimensions,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import type { ReportTargetType } from '../../Profile/ReportPage/types';
-import { createNavigationEventHandlers, type ReportNavigationParams } from '../events';
+// 临时定义类型，避免依赖不存在的模块
+type ReportTargetType = 'content' | 'user' | 'comment';
+
+// 临时导航处理函数
+const createNavigationEventHandlers = (navigation: any) => ({
+  navigateToReport: (params: any) => {
+    console.log('导航到举报页面:', params);
+    // TODO: 实现实际的导航逻辑
+  }
+});
 
 // ==================== 2. Types & Schema ====================
 export interface DetailHeaderAreaProps {

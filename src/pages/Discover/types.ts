@@ -78,3 +78,5 @@ export interface DiscoverUserInfo {
 // 从子页面导入的类型（重新导出）
 export * from './MainPage/types';
 export * from './DetailPage/types';
+export * from './PublishPage/types';
+export * from './ReportPage/types';

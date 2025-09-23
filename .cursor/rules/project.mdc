@@ -2,7 +2,7 @@
 alwaysApply: true
 ---
 ??? PATH ??
-????? 0000009D 64C1:D356
+????? 00000027 64C1:D356
 C:\USERS\D\DOCUMENTS\GITHUB\XIANGYUPAI-RNAPP\SRC
 +---globalComponents
 +---navigation
@@ -12,14 +12,42 @@ C:\USERS\D\DOCUMENTS\GITHUB\XIANGYUPAI-RNAPP\SRC
 |   |   |   +---CommentInputArea
 |   |   |   +---CommentListArea
 |   |   |   +---DetailHeaderArea
-|   |   |   +---events
-|   |   |   +---examples
 |   |   |   +---hooks
 |   |   |   +---ImageViewerArea
 |   |   |   +---services
-|   |   |   +---types
 |   |   |   \---UserInfoCardArea
-|   |   \---MainPage
+|   |   +---MainPage
+|   |   |   +---backend
+|   |   |   +---ContentCardArea
+|   |   |   +---HeaderArea
+|   |   |   +---MasonryContentArea
+|   |   |   \---TabNavigationArea
+|   |   +---PublishPage
+|   |   |   +---backend
+|   |   |   +---ContentEditorArea
+|   |   |   +---FunctionTagsArea
+|   |   |   +---hooks
+|   |   |   +---LocationSelectorDrawer
+|   |   |   +---MediaManagerArea
+|   |   |   +---PublishControlArea
+|   |   |   +---services
+|   |   |   +---TopicSelectorPage
+|   |   |   \---utils
+|   |   +---ReportPage
+|   |   |   +---backend
+|   |   |   +---DescriptionInputArea
+|   |   |   +---ImageUploadArea
+|   |   |   +---ReportTypeSelectionArea
+|   |   |   +---SubmitConfirmModal
+|   |   |   \---SuccessModal
+|   |   \---TopicDetailPage
+|   |       +---backend
+|   |       +---hooks
+|   |       +---services
+|   |       +---TopicHeaderArea
+|   |       +---TopicLoadingArea
+|   |       \---TopicPostCardArea
+|   |           \---assets
 |   +---GroupCenter
 |   |   +---MainPage
 |   |   |   +---ContentArea
@@ -105,6 +133,18 @@ C:\USERS\D\DOCUMENTS\GITHUB\XIANGYUPAI-RNAPP\SRC
 |           |       \---ModalOverlay
 |           \---TypeSelectionArea
 |               \---TypeCard
-+---screens
-|   \---discover
 \---types
+??? PATH ??
+????? 0000000D 64C1:D356
+C:\USERS\D\DOCUMENTS\GITHUB\XIANGYUPAI-RNAPP\ASSETS
++---action-icons
++---icons
+\---images
+    +---backgrounds
+    +---common
+    \---home
+        +---banner
+        +---bottom-navigation
+        +---header
+        +---limited-offers
+        \---team-party

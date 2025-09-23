@@ -3,7 +3,7 @@
  * 统一导出页面组件和相关类型
  */
 
-export { default as DiscoverDetailPage } from './index';
+export { default as DiscoverDetailPage } from './index.tsx';
 export * from './types';
 export { default as UserInfoCardArea } from './UserInfoCardArea';
 export { default as CommentListArea } from './CommentListArea';

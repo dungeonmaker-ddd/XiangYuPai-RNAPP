@@ -57,9 +57,8 @@ const IMAGE_SOURCE_MAP: Record<string, any> = {
   'icons/英雄联盟.png': require('../../assets/icons/英雄联盟.png'),
   'icons/荒野乱斗.png': require('../../assets/icons/荒野乱斗.png'),
   
-  // 通用图片
-  'images/common/default-avatar.png': require('../../assets/images/common/default-avatar.png'),
-  'images/backgrounds/linearGradint.png': require('../../assets/images/backgrounds/linearGradint.png'),
+  // 通用图片 - 默认头像已移除，使用纯色占位符替代
+  // 渐变背景已移除 - 使用纯色背景替代
   
   // 首页图标
   'images/home/header/定位.png': require('../../assets/images/home/header/定位.png'),
@@ -191,8 +190,8 @@ export const ICON_PATHS = {
   LOL: 'icons/英雄联盟.png',
   BRAWL_STARS: 'icons/荒野乱斗.png',
   
-  // 通用图标
-  DEFAULT_AVATAR: 'images/common/default-avatar.png',
+  // 通用图标 - 默认头像已移除，使用纯色占位符
+  // DEFAULT_AVATAR: 'images/common/default-avatar.png', // 已移除
   LOCATION: 'images/home/header/定位.png',
   SEARCH: 'images/home/header/搜索icon.png',
   

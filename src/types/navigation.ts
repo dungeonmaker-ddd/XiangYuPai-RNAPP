@@ -27,7 +27,7 @@ import type { RegionInfo, CurrentLocationInfo } from '../pages/Home/types';
 // 导入消息相关类型
 import type { User } from '../pages/Message/types';
 // 导入发现页面相关类型
-import type { DiscoverContentItem as ContentItem } from '../pages/Discover/types';
+import type { DiscoverContentItem as ContentItem, ReportPageRouteParams } from '../pages/Discover/types';
 
 // 路由参数类型定义
 export type RootStackParamList = {
@@ -50,6 +50,7 @@ export type RootStackParamList = {
     contentId: string;
     contentItem?: ContentItem;
   };
+  DiscoverReport: ReportPageRouteParams; // 举报页面
   LimitedOffers: undefined;
   SearchResult: { query: string };
 };

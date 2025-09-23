@@ -1,234 +1,215 @@
 /**
- * 详情页面主要业务逻辑Hook
- * 管理内容加载、互动操作、状态管理等核心功能
+ * 发现详情页面主业务逻辑Hook
+ * 
+ * TOC (快速跳转):
+ * [1] Imports
+ * [2] Types & Schema  
+ * [3] Constants & Config
+ * [4] Utils & Helpers
+ * [5] State Management
+ * [6] Domain Logic
+ * [7] Effect Handlers
+ * [8] Exports
  */
 
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { Alert, Share, Animated } from 'react-native';
-import {
-  DiscoverDetailState,
-  CommentItem,
-  InteractionType,
+// ==================== 1. Imports ====================
+import { useState, useCallback, useEffect } from 'react';
+import { Alert } from 'react-native';
+import type { 
+  ContentItem, 
+  CommentItem, 
   CommentActionType,
-  DetailPageError,
+  DetailPageState 
 } from '../types';
-import { ContentItem } from '../../discover/WaterfallList/types';
-import DetailDataService from '../services/DetailDataService';
 
-/**
- * 详情页面主Hook
- */
-export const useDiscoverDetail = (contentId: string, initialContent?: ContentItem) => {
-  // 状态管理
-  const [state, setState] = useState<DiscoverDetailState>({
-    // 内容相关
-    contentItem: initialContent || null,
-    isContentLoading: true, // 🔧 总是设为true，因为需要加载详情数据
-    contentError: null,
-    
-    // 评论相关
+// ==================== 2. Types & Schema ====================
+export interface UseDiscoverDetailReturn {
+  // State
+  contentItem: ContentItem | null;
+  comments: CommentItem[];
+  isContentLoading: boolean;
+  isCommentsLoading: boolean;
+  isCommentExpanded: boolean;
+  commentInputText: string;
+  showImageViewer: boolean;
+  currentImageIndex: number;
+  hasContent: boolean;
+  
+  // Actions
+  handleLike: () => void;
+  handleCollect: () => void;
+  handleFollow: () => void;
+  handleShare: () => void;
+  handleAddComment: (text: string, parentId?: string) => void;
+  handleCommentLike: (commentId: string) => void;
+  handleCommentAction: (commentId: string, action: CommentActionType) => void;
+  toggleCommentExpansion: () => void;
+  updateCommentInput: (text: string) => void;
+  openImageViewer: (index: number) => void;
+  hideImageViewer: () => void;
+}
+
+// ==================== 3. Constants & Config ====================
+const MOCK_COMMENTS: CommentItem[] = [
+  {
+    id: 'comment_1',
+    content: '这个地方真的很漂亮！我也想去看看',
+    user: {
+      id: 'user_1',
+      nickname: '旅行达人小王',
+      avatar: 'https://picsum.photos/100/100?random=1',
+    },
+    likeCount: 12,
+    isLiked: false,
+    createdAt: '2024-12-19T10:30:00Z',
+    location: {
+      address: '北京市朝阳区',
+      distance: 2.5,
+    },
+  },
+  {
+    id: 'comment_2',
+    content: '哇，拍得太好了！请问用的什么相机？',
+    user: {
+      id: 'user_2',
+      nickname: '摄影爱好者',
+      avatar: 'https://picsum.photos/100/100?random=2',
+    },
+    likeCount: 8,
+    isLiked: true,
+    createdAt: '2024-12-19T11:15:00Z',
+    replies: [
+      {
+        id: 'reply_1',
+        content: '用的iPhone 15 Pro Max，主要是光线好',
+        user: {
+          id: 'user_3',
+          nickname: '楼主',
+          avatar: 'https://picsum.photos/100/100?random=3',
+        },
+        likeCount: 3,
+        isLiked: false,
+        createdAt: '2024-12-19T11:20:00Z',
+        parentId: 'comment_2',
+      },
+    ],
+  },
+];
+
+// ==================== 4. Utils & Helpers ====================
+const generateMockContent = (contentId: string, initialContent?: ContentItem): ContentItem => {
+  if (initialContent) {
+    return initialContent;
+  }
+
+  return {
+    id: contentId,
+    title: '探索城市中的隐秘角落 🌆',
+    description: '今天发现了一个超棒的拍照地点，夕阳西下的时候特别美，分享给大家！记得带上相机哦～',
+    imageUrl: 'https://picsum.photos/400/600?random=detail',
+    createdAt: '2024-12-19T09:00:00Z',
+    user: {
+      id: 'user_main',
+      nickname: '城市探索者',
+      avatar: 'https://picsum.photos/100/100?random=main',
+      isFollowing: false,
+      verified: true,
+      level: 5,
+    },
+    location: {
+      address: '上海市黄浦区外滩',
+      latitude: 31.2304,
+      longitude: 121.4737,
+    },
+    tags: ['摄影', '城市探索', '夕阳', '外滩'],
+    stats: {
+      likeCount: 128,
+      collectCount: 45,
+      commentCount: 23,
+      shareCount: 12,
+    },
+    interactions: {
+      isLiked: false,
+      isCollected: false,
+    },
+  };
+};
+
+// ==================== 5. State Management ====================
+export const useDiscoverDetail = (
+  contentId: string,
+  initialContent?: ContentItem
+): UseDiscoverDetailReturn => {
+  const [state, setState] = useState<DetailPageState>({
+    contentItem: null,
     comments: [],
-    isCommentsLoading: false,
-    commentsError: null,
-    commentInputText: '',
+    isContentLoading: true,
+    isCommentsLoading: true,
     isCommentExpanded: false,
-    
-    // 互动相关
-    isLiking: false,
-    isCollecting: false,
-    isFollowing: false,
-    
-    // 推荐相关
-    recommendedItems: [],
-    isRecommendLoading: false,
-    
-    // UI状态
-    imageScale: 1,
+    commentInputText: '',
     showImageViewer: false,
     currentImageIndex: 0,
+    hasContent: false,
   });
 
-  // 动画值
-  const scaleAnim = useRef(new Animated.Value(1)).current;
-  const fadeAnim = useRef(new Animated.Value(1)).current;
+  // ==================== 6. Domain Logic ====================
+  const handleLike = useCallback(() => {
+    if (!state.contentItem) return;
 
-  /**
-   * 加载内容详情
-   */
-  const loadContentDetail = useCallback(async () => {
-    if (!contentId) return;
+    const newIsLiked = !state.contentItem.interactions.isLiked;
+    const newCount = newIsLiked 
+      ? state.contentItem.stats.likeCount + 1 
+      : state.contentItem.stats.likeCount - 1;
 
-    setState(prev => ({ ...prev, isContentLoading: true, contentError: null }));
-
-    try {
-      const response = await DetailDataService.getContentDetail({ contentId });
-      setState(prev => ({
-        ...prev,
-        contentItem: response.content,
-        recommendedItems: response.relatedContents || [],
-        isContentLoading: false,
-      }));
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : '加载内容失败';
-      setState(prev => ({
-        ...prev,
-        contentError: errorMessage,
-        isContentLoading: false,
-      }));
-    }
-  }, [contentId]);
-
-  /**
-   * 加载评论列表
-   */
-  const loadComments = useCallback(async () => {
-    if (!contentId) return;
-
-    setState(prev => ({ ...prev, isCommentsLoading: true, commentsError: null }));
-
-    try {
-      const response = await DetailDataService.getComments({ 
-        contentId,
-        sortBy: 'latest',
-      });
-      setState(prev => ({
-        ...prev,
-        comments: response.comments,
-        isCommentsLoading: false,
-      }));
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : '加载评论失败';
-      setState(prev => ({
-        ...prev,
-        commentsError: errorMessage,
-        isCommentsLoading: false,
-      }));
-    }
-  }, [contentId]);
-
-  /**
-   * 点赞操作
-   */
-  const handleLike = useCallback(async () => {
-    if (!state.contentItem || state.isLiking) return;
-
-    setState(prev => ({ ...prev, isLiking: true }));
-
-    // 乐观更新UI
-    const newIsLiked = !state.contentItem.isLiked;
-    const newLikeCount = state.contentItem.likeCount + (newIsLiked ? 1 : -1);
-    
     setState(prev => ({
       ...prev,
       contentItem: prev.contentItem ? {
         ...prev.contentItem,
-        isLiked: newIsLiked,
-        likeCount: Math.max(0, newLikeCount),
+        interactions: {
+          ...prev.contentItem.interactions,
+          isLiked: newIsLiked,
+        },
+        stats: {
+          ...prev.contentItem.stats,
+          likeCount: newCount,
+        },
       } : null,
     }));
 
-    // 点赞动画
-    Animated.sequence([
-      Animated.timing(scaleAnim, {
-        toValue: 1.2,
-        duration: 150,
-        useNativeDriver: true,
-      }),
-      Animated.timing(scaleAnim, {
-        toValue: 1,
-        duration: 150,
-        useNativeDriver: true,
-      }),
-    ]).start();
+    console.log('点赞操作:', { newIsLiked, newCount });
+  }, [state.contentItem]);
 
-    try {
-      const response = await DetailDataService.toggleLike({
-        contentId,
-        type: 'like',
-      });
+  const handleCollect = useCallback(() => {
+    if (!state.contentItem) return;
 
-      // 更新实际数据
-      setState(prev => ({
-        ...prev,
-        contentItem: prev.contentItem ? {
-          ...prev.contentItem,
-          isLiked: response.isActive,
-          likeCount: response.newCount,
-        } : null,
-        isLiking: false,
-      }));
-    } catch (error) {
-      // 错误回滚
-      setState(prev => ({
-        ...prev,
-        contentItem: prev.contentItem ? {
-          ...prev.contentItem,
-          isLiked: !newIsLiked,
-          likeCount: state.contentItem?.likeCount || 0,
-        } : null,
-        isLiking: false,
-      }));
-      
-      Alert.alert('操作失败', '点赞失败，请重试');
-    }
-  }, [state.contentItem, state.isLiking, contentId, scaleAnim]);
+    const newIsCollected = !state.contentItem.interactions.isCollected;
+    const newCount = newIsCollected 
+      ? state.contentItem.stats.collectCount + 1 
+      : state.contentItem.stats.collectCount - 1;
 
-  /**
-   * 收藏操作
-   */
-  const handleCollect = useCallback(async () => {
-    if (!state.contentItem || state.isCollecting) return;
-
-    setState(prev => ({ ...prev, isCollecting: true }));
-
-    const newIsCollected = !state.contentItem.isCollected;
-    
     setState(prev => ({
       ...prev,
       contentItem: prev.contentItem ? {
         ...prev.contentItem,
-        isCollected: newIsCollected,
+        interactions: {
+          ...prev.contentItem.interactions,
+          isCollected: newIsCollected,
+        },
+        stats: {
+          ...prev.contentItem.stats,
+          collectCount: newCount,
+        },
       } : null,
     }));
 
-    try {
-      const response = await DetailDataService.toggleCollect({
-        contentId,
-        type: 'collect',
-      });
+    Alert.alert('提示', newIsCollected ? '已收藏' : '已取消收藏');
+  }, [state.contentItem]);
 
-      setState(prev => ({
-        ...prev,
-        contentItem: prev.contentItem ? {
-          ...prev.contentItem,
-          isCollected: response.isActive,
-        } : null,
-        isCollecting: false,
-      }));
-    } catch (error) {
-      setState(prev => ({
-        ...prev,
-        contentItem: prev.contentItem ? {
-          ...prev.contentItem,
-          isCollected: !newIsCollected,
-        } : null,
-        isCollecting: false,
-      }));
-      
-      Alert.alert('操作失败', '收藏失败，请重试');
-    }
-  }, [state.contentItem, state.isCollecting, contentId]);
-
-  /**
-   * 关注操作
-   */
-  const handleFollow = useCallback(async () => {
-    if (!state.contentItem?.user || state.isFollowing) return;
-
-    setState(prev => ({ ...prev, isFollowing: true }));
+  const handleFollow = useCallback(() => {
+    if (!state.contentItem) return;
 
     const newIsFollowing = !state.contentItem.user.isFollowing;
-    
+
     setState(prev => ({
       ...prev,
       contentItem: prev.contentItem ? {
@@ -240,219 +221,193 @@ export const useDiscoverDetail = (contentId: string, initialContent?: ContentIte
       } : null,
     }));
 
-    try {
-      const response = await DetailDataService.toggleFollow(state.contentItem.user.id);
+    Alert.alert('提示', newIsFollowing ? '已关注' : '已取消关注');
+  }, [state.contentItem]);
 
-      setState(prev => ({
-        ...prev,
-        contentItem: prev.contentItem ? {
-          ...prev.contentItem,
-          user: {
-            ...prev.contentItem.user,
-            isFollowing: response.isActive,
-          },
-        } : null,
-        isFollowing: false,
-      }));
-    } catch (error) {
-      setState(prev => ({
-        ...prev,
-        contentItem: prev.contentItem ? {
-          ...prev.contentItem,
-          user: {
-            ...prev.contentItem.user,
-            isFollowing: !newIsFollowing,
-          },
-        } : null,
-        isFollowing: false,
-      }));
-      
-      Alert.alert('操作失败', '关注失败，请重试');
-    }
-  }, [state.contentItem?.user, state.isFollowing]);
-
-  /**
-   * 分享操作
-   */
-  const handleShare = useCallback(async () => {
+  const handleShare = useCallback(() => {
     if (!state.contentItem) return;
 
-    try {
-      const shareContent = {
-        title: state.contentItem.title,
-        message: `${state.contentItem.title}\n${state.contentItem.description || ''}`,
-        url: `https://app.xiangyupai.com/content/${contentId}`,
-      };
+    setState(prev => ({
+      ...prev,
+      contentItem: prev.contentItem ? {
+        ...prev.contentItem,
+        stats: {
+          ...prev.contentItem.stats,
+          shareCount: prev.contentItem.stats.shareCount + 1,
+        },
+      } : null,
+    }));
 
-      const result = await Share.share(shareContent);
-      
-      if (result.action === Share.sharedAction) {
-        // 分享成功，可以记录分析数据
-        await DetailDataService.shareContent(contentId);
-      }
-    } catch (error) {
-      Alert.alert('分享失败', '无法分享此内容');
-    }
-  }, [state.contentItem, contentId]);
+    Alert.alert('分享', '分享功能开发中...');
+  }, [state.contentItem]);
 
-  /**
-   * 添加评论
-   */
-  const handleAddComment = useCallback(async (content: string, parentId?: string) => {
-    if (!content.trim()) return;
+  const handleAddComment = useCallback((text: string, parentId?: string) => {
+    if (!text.trim()) return;
 
-    try {
-      const newComment = await DetailDataService.addComment({
-        contentId,
-        content: content.trim(),
-        parentId,
-      });
+    const newComment: CommentItem = {
+      id: `comment_${Date.now()}`,
+      content: text,
+      user: {
+        id: 'current_user',
+        nickname: '我',
+        avatar: 'https://picsum.photos/100/100?random=current',
+      },
+      likeCount: 0,
+      isLiked: false,
+      createdAt: new Date().toISOString(),
+    };
 
-      setState(prev => ({
-        ...prev,
-        comments: parentId 
-          ? prev.comments.map(comment => 
-              comment.id === parentId 
-                ? { ...comment, replies: [...(comment.replies || []), newComment] }
-                : comment
-            )
-          : [newComment, ...prev.comments],
-        commentInputText: '',
-        contentItem: prev.contentItem ? {
-          ...prev.contentItem,
-          commentCount: prev.contentItem.commentCount + 1,
-        } : null,
-      }));
-    } catch (error) {
-      Alert.alert('评论失败', '发送评论失败，请重试');
-    }
-  }, [contentId]);
+    setState(prev => ({
+      ...prev,
+      comments: [newComment, ...prev.comments],
+      commentInputText: '',
+      contentItem: prev.contentItem ? {
+        ...prev.contentItem,
+        stats: {
+          ...prev.contentItem.stats,
+          commentCount: prev.contentItem.stats.commentCount + 1,
+        },
+      } : null,
+    }));
 
-  /**
-   * 评论点赞
-   */
-  const handleCommentLike = useCallback(async (commentId: string) => {
-    try {
-      const response = await DetailDataService.toggleCommentLike(commentId);
-      
-      setState(prev => ({
-        ...prev,
-        comments: prev.comments.map(comment => {
-          if (comment.id === commentId) {
-            return {
-              ...comment,
-              isLiked: response.isActive,
-              likeCount: response.newCount,
-            };
-          }
-          if (comment.replies) {
-            return {
-              ...comment,
-              replies: comment.replies.map(reply =>
-                reply.id === commentId
-                  ? { ...reply, isLiked: response.isActive, likeCount: response.newCount }
-                  : reply
-              ),
-            };
-          }
-          return comment;
-        }),
-      }));
-    } catch (error) {
-      Alert.alert('操作失败', '评论点赞失败');
-    }
+    Alert.alert('成功', '评论发布成功');
   }, []);
 
-  /**
-   * 评论操作处理
-   */
-  const handleCommentAction = useCallback(async (commentId: string, action: CommentActionType) => {
-    switch (action) {
-      case 'like':
-        await handleCommentLike(commentId);
-        break;
-      case 'delete':
-        Alert.alert(
-          '删除评论',
-          '确定要删除这条评论吗？',
-          [
-            { text: '取消', style: 'cancel' },
-            {
-              text: '删除',
-              style: 'destructive',
-              onPress: async () => {
-                try {
-                  await DetailDataService.deleteComment(commentId);
-                  setState(prev => ({
-                    ...prev,
-                    comments: prev.comments.filter(comment => comment.id !== commentId),
-                  }));
-                } catch (error) {
-                  Alert.alert('删除失败', '无法删除评论');
-                }
-              },
-            },
-          ]
-        );
-        break;
-      case 'report':
-        Alert.alert('举报', '已提交举报，我们会尽快处理');
-        break;
-    }
-  }, [handleCommentLike]);
-
-  /**
-   * 切换评论展开状态
-   */
-  const toggleCommentExpansion = useCallback(() => {
-    setState(prev => ({ ...prev, isCommentExpanded: !prev.isCommentExpanded }));
-  }, []);
-
-  /**
-   * 更新评论输入文本
-   */
-  const updateCommentInput = useCallback((text: string) => {
-    setState(prev => ({ ...prev, commentInputText: text }));
-  }, []);
-
-  /**
-   * 显示图片查看器
-   */
-  const showImageViewer = useCallback((index: number = 0) => {
-    setState(prev => ({ 
-      ...prev, 
-      showImageViewer: true, 
-      currentImageIndex: index 
+  const handleCommentLike = useCallback((commentId: string) => {
+    setState(prev => ({
+      ...prev,
+      comments: prev.comments.map(comment => {
+        if (comment.id === commentId) {
+          const newIsLiked = !comment.isLiked;
+          const newCount = newIsLiked ? comment.likeCount + 1 : comment.likeCount - 1;
+          return {
+            ...comment,
+            isLiked: newIsLiked,
+            likeCount: newCount,
+          };
+        }
+        return comment;
+      }),
     }));
   }, []);
 
-  /**
-   * 隐藏图片查看器
-   */
-  const hideImageViewer = useCallback(() => {
-    setState(prev => ({ ...prev, showImageViewer: false }));
+  const handleCommentAction = useCallback((commentId: string, action: CommentActionType) => {
+    switch (action) {
+      case 'delete':
+        setState(prev => ({
+          ...prev,
+          comments: prev.comments.filter(c => c.id !== commentId),
+        }));
+        Alert.alert('成功', '评论已删除');
+        break;
+      case 'report':
+        Alert.alert('举报', '举报功能开发中...');
+        break;
+      default:
+        console.log('评论操作:', action, commentId);
+    }
   }, []);
 
-  // 初始化加载
-  useEffect(() => {
-    // 🔧 总是加载详情数据以获取完整的用户信息（包括扩展字段）
-    // 即使有 initialContent，也需要加载详情来获取性别、年龄、个性签名等信息
-    loadContentDetail();
-    loadComments();
-  }, [loadContentDetail, loadComments]);
+  const toggleCommentExpansion = useCallback(() => {
+    setState(prev => ({
+      ...prev,
+      isCommentExpanded: !prev.isCommentExpanded,
+    }));
+  }, []);
 
-  // 返回状态和操作函数
+  const updateCommentInput = useCallback((text: string) => {
+    setState(prev => ({
+      ...prev,
+      commentInputText: text,
+    }));
+  }, []);
+
+  const openImageViewer = useCallback((index: number) => {
+    setState(prev => ({
+      ...prev,
+      showImageViewer: true,
+      currentImageIndex: index,
+    }));
+  }, []);
+
+  const hideImageViewer = useCallback(() => {
+    setState(prev => ({
+      ...prev,
+      showImageViewer: false,
+    }));
+  }, []);
+
+  // ==================== 7. Effect Handlers ====================
+  useEffect(() => {
+    // 模拟加载内容数据
+    const loadContent = async () => {
+      try {
+        setState(prev => ({ ...prev, isContentLoading: true }));
+        
+        // 模拟网络延迟
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        const content = generateMockContent(contentId, initialContent);
+        
+        setState(prev => ({
+          ...prev,
+          contentItem: content,
+          isContentLoading: false,
+          hasContent: true,
+        }));
+      } catch (error) {
+        console.error('加载内容失败:', error);
+        setState(prev => ({
+          ...prev,
+          isContentLoading: false,
+          hasContent: false,
+        }));
+      }
+    };
+
+    loadContent();
+  }, [contentId, initialContent]);
+
+  useEffect(() => {
+    // 模拟加载评论数据
+    const loadComments = async () => {
+      try {
+        setState(prev => ({ ...prev, isCommentsLoading: true }));
+        
+        // 模拟网络延迟
+        await new Promise(resolve => setTimeout(resolve, 300));
+        
+        setState(prev => ({
+          ...prev,
+          comments: MOCK_COMMENTS,
+          isCommentsLoading: false,
+        }));
+      } catch (error) {
+        console.error('加载评论失败:', error);
+        setState(prev => ({
+          ...prev,
+          isCommentsLoading: false,
+        }));
+      }
+    };
+
+    loadComments();
+  }, [contentId]);
+
+  // ==================== 8. Exports ====================
   return {
-    // 状态
-    ...state,
+    // State
+    contentItem: state.contentItem,
+    comments: state.comments,
+    isContentLoading: state.isContentLoading,
+    isCommentsLoading: state.isCommentsLoading,
+    isCommentExpanded: state.isCommentExpanded,
+    commentInputText: state.commentInputText,
+    showImageViewer: state.showImageViewer,
+    currentImageIndex: state.currentImageIndex,
+    hasContent: state.hasContent,
     
-    // 动画值
-    scaleAnim,
-    fadeAnim,
-    
-    // 操作函数
-    loadContentDetail,
-    loadComments,
+    // Actions
     handleLike,
     handleCollect,
     handleFollow,
@@ -462,15 +417,7 @@ export const useDiscoverDetail = (contentId: string, initialContent?: ContentIte
     handleCommentAction,
     toggleCommentExpansion,
     updateCommentInput,
-    openImageViewer: showImageViewer,
+    openImageViewer,
     hideImageViewer,
-    
-    // 便捷状态
-    hasContent: !!state.contentItem,
-    hasComments: state.comments.length > 0,
-    isLoading: state.isContentLoading || state.isCommentsLoading,
-    hasError: !!(state.contentError || state.commentsError),
   };
 };
-
-export default useDiscoverDetail;

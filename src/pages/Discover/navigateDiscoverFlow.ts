@@ -58,12 +58,13 @@ export const navigateToPrivateChat = (params: {
 // 导航到举报页面
 export const navigateToReport = (params: { 
   targetId: string; 
-  targetType: 'post' | 'user' | 'comment'; 
+  targetType: 'post' | 'user' | 'comment';
+  reportContext?: string;
 }) => {
   console.log('导航到举报页面', params);
   
   // 示例实现
-  // navigation.navigate('ProfileReport', params);
+  // navigation.navigate('DiscoverReport', params);
 };
 
 // 导航到发布页面
@@ -119,16 +120,16 @@ export const navigateDiscoverFlow = {
     navigateToPrivateChat({ userId, userName });
   },
   
-  reportContent: (postId: string) => {
-    navigateToReport({ targetId: postId, targetType: 'post' });
+  reportContent: (postId: string, context?: string) => {
+    navigateToReport({ targetId: postId, targetType: 'post', reportContext: context || 'discover_main' });
   },
   
-  reportUser: (userId: string) => {
-    navigateToReport({ targetId: userId, targetType: 'user' });
+  reportUser: (userId: string, context?: string) => {
+    navigateToReport({ targetId: userId, targetType: 'user', reportContext: context || 'discover_main' });
   },
   
-  reportComment: (commentId: string) => {
-    navigateToReport({ targetId: commentId, targetType: 'comment' });
+  reportComment: (commentId: string, context?: string) => {
+    navigateToReport({ targetId: commentId, targetType: 'comment', reportContext: context || 'discover_detail' });
   },
   
   // 筛选导航
@@ -159,7 +160,7 @@ export const navigateDiscoverFlow = {
         // 可以添加自动聚焦到评论输入框的逻辑
         break;
       case 'report':
-        navigateToReport({ targetId: postId, targetType: 'post' });
+        navigateToReport({ targetId: postId, targetType: 'post', reportContext: 'discover_content_interaction' });
         break;
       case 'like':
       case 'share':
@@ -185,7 +186,7 @@ export const navigateDiscoverFlow = {
         navigateToPrivateChat({ userId, userName });
         break;
       case 'report':
-        navigateToReport({ targetId: userId, targetType: 'user' });
+        navigateToReport({ targetId: userId, targetType: 'user', reportContext: 'discover_user_interaction' });
         break;
       case 'follow':
         // 关注操作通常不需要导航，只需要状态更新

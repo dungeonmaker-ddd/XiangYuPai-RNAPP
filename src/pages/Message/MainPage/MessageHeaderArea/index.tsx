@@ -47,7 +47,7 @@ const createHeaderLayout = () => ({
 
 const getIconSource = (iconName: string) => {
   const iconMap: { [key: string]: any } = {
-    clear: require('../components/title/清理.png')
+    clear: require('./title/清理.png')
   };
   return iconMap[iconName];
 };

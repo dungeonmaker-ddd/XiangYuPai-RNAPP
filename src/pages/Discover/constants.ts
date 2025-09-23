@@ -11,12 +11,14 @@ export const DISCOVER_PAGE_GROUP = 'Discover';
 export const DISCOVER_PAGES = {
   MAIN: 'MainPage',
   DETAIL: 'DetailPage',
+  PUBLISH: 'PublishPage',
 } as const;
 
 // 导航路由常量
 export const DISCOVER_ROUTES = {
   MAIN: '/discover',
   DETAIL: '/discover/detail',
+  PUBLISH: '/discover/publish',
 } as const;
 
 // 内容分类常量
@@ -73,3 +75,4 @@ export const DEFAULT_FILTER_OPTIONS: DiscoverFilterOptions = {
 // 从子页面导入的常量（重新导出）
 export * from './MainPage/constants';
 export * from './DetailPage/constants';
+export * from './PublishPage/constants';

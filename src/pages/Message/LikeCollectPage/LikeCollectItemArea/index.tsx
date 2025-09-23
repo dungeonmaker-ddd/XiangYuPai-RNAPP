@@ -28,7 +28,12 @@ interface LikeCollectItemAreaProps {
 }
 
 // ==================== 3. Constants & Config ====================
-const DEFAULT_THUMBNAIL = require('../../../../../assets/images/common/default-avatar.png');
+// 使用纯色占位符替代默认头像图片
+const DEFAULT_THUMBNAIL_STYLE = {
+  backgroundColor: '#e0e0e0',
+  justifyContent: 'center' as const,
+  alignItems: 'center' as const,
+};
 
 // ==================== 4. Utils & Helpers ====================
 const formatTime = (timestamp: string) => {
@@ -212,6 +217,11 @@ const styles = StyleSheet.create({
     fontSize: 8,
     color: STYLES.COLORS.WHITE
   }
+});
+
+// ==================== 8. Exports ====================
+export default LikeCollectItemArea;
+
 });
 
 // ==================== 8. Exports ====================

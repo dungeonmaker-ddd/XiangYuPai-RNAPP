@@ -80,7 +80,7 @@ const LimitedOffersArea: React.FC<LimitedOffersAreaProps> = ({
     >
       <View style={styles.imageContainer}>
         <Image
-          source={require('../../../../assets/images/common/default-avatar.png')}
+          source={null} // 移除默认头像，使用样式占位符
           style={styles.userImage}
         />
         <View style={styles.orderBadge}>

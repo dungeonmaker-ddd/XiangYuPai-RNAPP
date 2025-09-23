@@ -1,5 +1,7 @@
 /**
- * 详情页面Hooks导出文件
+ * 发现详情页面Hooks导出文件
+ * 统一导出所有业务逻辑Hooks
  */
 
-export { default as useDiscoverDetail } from './useDiscoverDetail';
+export { useDiscoverDetail } from './useDiscoverDetail';
+export type { UseDiscoverDetailReturn } from './useDiscoverDetail';

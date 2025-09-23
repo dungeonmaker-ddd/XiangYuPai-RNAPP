@@ -44,7 +44,12 @@ interface MessageBubbleAreaProps {
 }
 
 // ==================== 3. Constants & Config ====================
-const DEFAULT_IMAGE = require('../../../../../assets/images/common/default-avatar.png');
+// 使用纯色占位符替代默认图片
+const DEFAULT_IMAGE_STYLE = {
+  backgroundColor: '#e0e0e0',
+  justifyContent: 'center' as const,
+  alignItems: 'center' as const,
+};
 const STATUS_ICONS = {
   sending: '⏳',
   sent: '✓',
@@ -406,6 +411,11 @@ const styles = StyleSheet.create({
     opacity: 0.6,
     textAlign: 'right'
   }
+});
+
+// ==================== 8. Exports ====================
+export default MessageBubbleArea;
+
 });
 
 // ==================== 8. Exports ====================

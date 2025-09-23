@@ -18,7 +18,12 @@ const UserAvatar: React.FC<UserAvatarProps> = ({
   size = 'medium',
   style
 }) => {
-  const defaultAvatar = require('../../../../assets/images/common/default-avatar.png');
+  // 使用纯色背景替代默认头像图片
+  const defaultAvatarStyle = {
+    backgroundColor: '#e0e0e0',
+    justifyContent: 'center' as const,
+    alignItems: 'center' as const,
+  };
   
   const getSizeStyle = () => {
     switch (size) {
@@ -34,11 +39,16 @@ const UserAvatar: React.FC<UserAvatarProps> = ({
 
   return (
     <View style={[styles.container, getSizeStyle(), style]}>
-      <Image
-        source={uri ? { uri } : defaultAvatar}
-        style={[styles.avatar, getSizeStyle()]}
-        defaultSource={defaultAvatar}
-      />
+      {uri ? (
+        <Image
+          source={{ uri }}
+          style={[styles.avatar, getSizeStyle()]}
+        />
+      ) : (
+        <View style={[styles.avatar, getSizeStyle(), defaultAvatarStyle]}>
+          {/* 显示默认头像占位符，可以是文字或图标 */}
+        </View>
+      )}
     </View>
   );
 };
@@ -46,6 +56,16 @@ const UserAvatar: React.FC<UserAvatarProps> = ({
 const styles = StyleSheet.create({
   container: {
     overflow: 'hidden',
+    backgroundColor: STYLES.COLORS.LIGHT_GRAY
+  },
+  avatar: {
+    width: '100%',
+    height: '100%'
+  }
+});
+
+export default UserAvatar;
+
     backgroundColor: STYLES.COLORS.LIGHT_GRAY
   },
   avatar: {

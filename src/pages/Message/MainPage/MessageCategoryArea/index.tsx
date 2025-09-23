@@ -52,10 +52,10 @@ const CARD_LAYOUT = {
 // #region 5. Utils & Helpers
 const getFunctionIcon = (title: string) => {
   const iconMap: { [key: string]: any } = {
-    '赞和收藏': require('../components/functionBtn/赞和收藏.png'),
-    '评论': require('../components/functionBtn/评论.png'),
-    '粉丝': require('../components/functionBtn/粉丝.png'),
-    '系统通知': require('../components/functionBtn/系统通知.png'),
+    '赞和收藏': require('./functionBtn/赞和收藏.png'),
+    '评论': require('./functionBtn/评论.png'),
+    '粉丝': require('./functionBtn/粉丝.png'),
+    '系统通知': require('./functionBtn/系统通知.png'),
   };
   return iconMap[title];
 };

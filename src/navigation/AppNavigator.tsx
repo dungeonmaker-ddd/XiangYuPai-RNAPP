@@ -14,6 +14,7 @@ import { GroupCenterMainPage } from '../pages/GroupCenter';
 import { GroupCenterPublishPage } from '../pages/GroupCenter';
 import { PrivateChatScreen } from '../pages/Message/PrivateChatPage';
 import { DiscoverDetailPage } from '../pages/Discover/DetailPage';
+import { DiscoverReportPage } from '../pages/Discover';
 
 // 导入类型定义
 import type { RootStackParamList } from '../types/navigation';
@@ -93,6 +94,17 @@ const AppNavigator: React.FC = () => {
         <Stack.Screen 
           name="DiscoverDetail" 
           component={DiscoverDetailPage}
+          options={{
+            headerShown: false,
+            animation: 'slide_from_right', // 从右侧滑入
+            presentation: 'card', // 卡片展示模式
+          }}
+        />
+        
+        {/* 举报页面 */}
+        <Stack.Screen 
+          name="DiscoverReport" 
+          component={DiscoverReportPage}
           options={{
             headerShown: false,
             animation: 'slide_from_right', // 从右侧滑入

@@ -15,7 +15,6 @@
 import React, { useCallback } from 'react';
 import {
   View,
-  ImageBackground,
   StyleSheet,
   RefreshControl,
 } from 'react-native';
@@ -130,12 +129,8 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      {/* 渐变背景图片 */}
-      <ImageBackground
-        source={require('../../../assets/images/backgrounds/linearGradint.png')}
-        style={styles.gradientBackground}
-        resizeMode="cover"
-      />
+      {/* 渐变背景 - 使用纯色背景替代图片 */}
+      <View style={styles.gradientBackground} />
       
       {/* 顶部导航区域 */}
       <HeaderArea
@@ -149,13 +144,9 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
       />
 
       {/* 头部内容区域 */}
-      <ImageBackground
-        source={require('../../../assets/images/backgrounds/linearGradint.png')}
-        style={styles.headerBackground}
-        resizeMode="cover"
-      >
+      <View style={styles.headerBackground}>
         {renderHeaderContent()}
-      </ImageBackground>
+      </View>
 
       {/* 用户列表区域 */}
       <UserListArea
@@ -183,6 +174,7 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     zIndex: -1,
+    backgroundColor: '#f8f9fa', // 浅灰色背景
   },
   headerBackground: {
     backgroundColor: 'transparent',
