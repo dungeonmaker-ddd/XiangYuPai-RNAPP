@@ -4,4 +4,4 @@
 
 export { default as GlobalBottomNavigation } from './GlobalBottomNavigation';
 export { default as AppNavigator } from './AppNavigator';
-export { default } from './GlobalBottomNavigation';
+export { default } from './AppNavigator';

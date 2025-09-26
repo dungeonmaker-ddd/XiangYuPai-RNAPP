@@ -101,7 +101,12 @@ const ChatItem: React.FC<ChatItemProps> = ({ chat, onPress }) => {
     }
   };
 
-  const defaultAvatar = require('../../../../assets/images/common/default-avatar.png');
+  // 使用纯色占位符替代默认头像图片
+  const defaultAvatarStyle = {
+    backgroundColor: '#e0e0e0',
+    justifyContent: 'center' as const,
+    alignItems: 'center' as const,
+  };
   const avatarSize = STYLES.SIZES.AVATAR_LARGE;
 
   return (

@@ -69,11 +69,9 @@ import {
   Z_INDEX,
 } from './constants';
 
-// 导入组件
-import ActivityTypeSelector from './components/ActivityTypeSelector';
-import PublishForm from './components/PublishForm';
-import AgreementSettings from './components/AgreementSettings';
-import PaymentModal from './components/PaymentModal';
+// 导入组件（使用实际存在的组件）
+import HeaderArea from './HeaderArea';
+import TypeSelectionArea from './TypeSelectionArea';
 
 // ══════════════════════════════════════════════════════════════
 // 2. Constants & Config (30-50行)
@@ -453,28 +451,17 @@ const PublishGroupScreen: React.FC<PublishGroupScreenProps> = ({
           keyboardShouldPersistTaps="handled"
         >
           {/* 活动类型选择 */}
-          <ActivityTypeSelector
-            selectedType={publishState.selectedActivityType}
-            onTypeSelect={handleActivityTypeSelect}
-            validation={publishState.validation.activityType}
-          />
+          <TypeSelectionArea />
 
-          {/* 发布表单 */}
-          <PublishForm
-            title={publishState.title}
-            content={publishState.content}
-            parameters={publishState.parameters}
-            onTitleChange={handleTitleChange}
-            onContentChange={handleContentChange}
-            onParametersChange={handleParametersChange}
-          />
+          {/* 发布表单 - 暂时使用占位符 */}
+          <View style={styles.placeholderContainer}>
+            <Text style={styles.placeholderText}>发布表单组件开发中...</Text>
+          </View>
 
-          {/* 约定项设置 */}
-          <AgreementSettings
-            settings={publishState.agreement}
-            onSettingsChange={handleAgreementChange}
-            validation={publishState.validation.agreement}
-          />
+          {/* 约定项设置 - 暂时使用占位符 */}
+          <View style={styles.placeholderContainer}>
+            <Text style={styles.placeholderText}>约定设置组件开发中...</Text>
+          </View>
 
           {/* 发布规则提示 */}
           <View style={styles.rulesSection}>
@@ -522,16 +509,8 @@ const PublishGroupScreen: React.FC<PublishGroupScreenProps> = ({
         </TouchableOpacity>
       </View>
 
-      {/* 支付确认弹窗 */}
-      {publishState.paymentInfo && (
-        <PaymentModal
-          visible={publishState.showPaymentModal}
-          paymentInfo={publishState.paymentInfo}
-          onPaymentConfirm={handlePaymentConfirm}
-          onPaymentCancel={handlePaymentCancel}
-          onClose={handlePaymentCancel}
-        />
-      )}
+      {/* 支付确认弹窗 - 暂时注释 */}
+      {/* TODO: PaymentModal 组件需要实现 */}
     </View>
   );
 };
@@ -645,6 +624,20 @@ const styles = StyleSheet.create({
     color: COLORS.WHITE,
     fontSize: FONT_SIZE.LG,
     fontWeight: FONT_WEIGHT.SEMIBOLD,
+  },
+  // 占位符样式
+  placeholderContainer: {
+    padding: 16,
+    margin: 16,
+    backgroundColor: '#f5f5f5',
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+
+  placeholderText: {
+    fontSize: 14,
+    color: '#999',
+    textAlign: 'center',
   },
 });
 

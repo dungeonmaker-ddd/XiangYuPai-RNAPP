@@ -74,12 +74,12 @@ export const useContentValidator = (): UseContentValidatorReturn => {
   }, []);
 
   // 主要验证函数
-  const validateContent = useCallback(async (content: PublishContentData): Promise<ValidationState> => {
+  const validateFullContent = useCallback(async (content: PublishContentData): Promise<ValidationState> => {
     setValidation(prev => ({ ...prev, isValidating: true }));
     
     try {
       // 模拟异步验证（如服务器端验证）
-      await new Promise(resolve => setTimeout(resolve, 300));
+      await new Promise(resolve => setTimeout(() => resolve(undefined), 300));
       
       const titleErrors = validateTitle(content.title);
       const contentErrors = validateContent(content.content);
@@ -147,7 +147,7 @@ export const useContentValidator = (): UseContentValidatorReturn => {
 
   return {
     validation,
-    validateContent,
+    validateContent: validateFullContent,
     clearValidation,
     isValid,
     errors,

@@ -27,7 +27,7 @@ import DetailHeaderArea from './DetailHeaderArea';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
-const DiscoverDetailPage: React.FC<DiscoverDetailPageProps> = ({
+const DiscoverDetailPage: React.FC<any> = ({
   navigation,
   route,
 }) => {
@@ -395,4 +395,9 @@ const styles = StyleSheet.create({
   },
 });
 
+// 导出原始组件，供导航使用
+export { DiscoverDetailPage };
 export default memo(DiscoverDetailPage);
+
+// 导出一个简化的版本供导航使用
+export const DiscoverDetailPageForNavigation = DiscoverDetailPage as React.ComponentType<any>;

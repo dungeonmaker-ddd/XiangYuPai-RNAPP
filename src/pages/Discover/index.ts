@@ -5,7 +5,7 @@
  */
 
 // 主页面导出
-export { default as DiscoverMainPage } from './MainPage';
+export { DiscoverMainPage, DiscoverMainPage as default } from './MainPage';
 
 // 主页面组件区域导出
 export { default as HeaderArea } from './MainPage/HeaderArea';

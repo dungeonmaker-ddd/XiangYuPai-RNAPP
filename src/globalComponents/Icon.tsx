@@ -63,7 +63,7 @@ const IMAGE_SOURCE_MAP: Record<string, any> = {
   // 首页图标
   'images/home/header/定位.png': require('../../assets/images/home/header/定位.png'),
   'images/home/header/搜索icon.png': require('../../assets/images/home/header/搜索icon.png'),
-  'images/home/banner/刺客信条4poster.png': require('../../assets/images/home/banner/刺客信条4poster.png'),
+  'images/home/banner/assassin-creed-4-poster.png': require('../../assets/images/home/banner/assassin-creed-4-poster.png'),
   'images/home/team-party/组局中心.png': require('../../assets/images/home/team-party/组局中心.png'),
   'images/home/team-party/组局中心字幕.png': require('../../assets/images/home/team-party/组局中心字幕.png'),
   'images/home/limited-offers/限时专享.png': require('../../assets/images/home/limited-offers/限时专享.png'),

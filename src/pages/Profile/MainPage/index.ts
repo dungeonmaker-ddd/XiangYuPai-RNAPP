@@ -4,7 +4,7 @@
  */
 
 // 主组件导出
-export { ProfileScreen } from './ProfileScreen';
+export { ProfileScreen, ProfileScreen as ProfileMainPage } from './ProfileScreen';
 export { default as ProfileScreenDefault } from './ProfileScreen';
 
 // 子组件导出 - 基于新的嵌套化架构

@@ -5,7 +5,7 @@
  */
 
 // 主页面导出
-export { default as ProfileMainPage } from './MainPage';
+export { ProfileMainPage, ProfileScreen } from './MainPage';
 
 // 子页面导出
 export { default as ProfileReportPage } from './ReportPage';

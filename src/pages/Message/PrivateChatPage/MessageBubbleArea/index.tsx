@@ -415,8 +415,3 @@ const styles = StyleSheet.create({
 
 // ==================== 8. Exports ====================
 export default MessageBubbleArea;
-
-});
-
-// ==================== 8. Exports ====================
-export default MessageBubbleArea;

@@ -72,7 +72,7 @@ const SearchSuggestionsArea: React.FC<SearchSuggestionsAreaProps> = ({
   const { 
     getSuggestionIcon, 
     getSuggestionTypeText, 
-    renderHighlightedText,
+    getHighlightedTextParts,
     truncateText 
   } = utilsSuggestionFormat();
 
@@ -94,7 +94,19 @@ const SearchSuggestionsArea: React.FC<SearchSuggestionsAreaProps> = ({
         
         {/* 建议文本 */}
         <View style={styles.suggestionTextContainer}>
-          {renderHighlightedText(item.text, keyword)}
+          <Text style={styles.suggestionText}>
+            {getHighlightedTextParts(item.text, keyword).map((part, index) => (
+              <Text
+                key={index}
+                style={[
+                  styles.suggestionText,
+                  part.highlighted && styles.suggestionTextHighlighted,
+                ]}
+              >
+                {part.text}
+              </Text>
+            ))}
+          </Text>
           
           {/* 类型标签 */}
           <Text style={styles.suggestionType}>
@@ -203,6 +215,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+  },
+  suggestionText: {
+    flex: 1,
+    fontSize: FONTS.size.md,
+    color: COLORS.textPrimary,
+    marginRight: 12,
+  },
+  suggestionTextHighlighted: {
+    color: COLORS.primary,
+    fontWeight: FONTS.weight.semiBold,
+    backgroundColor: COLORS.highlightBackground,
   },
   suggestionType: {
     fontSize: FONTS.size.xs,

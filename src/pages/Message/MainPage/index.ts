@@ -3,12 +3,12 @@
  */
 
 // 主页面
-export { default as MessageCenterScreen } from './index';
-export { default } from './index';
+export { default as MessageCenterScreen, default as MessageMainPage } from './index.tsx';
+export { default } from './index.tsx';
 
-// 子模块页面
-export * from './like-collect';
-export * from './private-chat';
+// 子模块页面 - 注释掉不存在的模块
+// export * from './like-collect'; // 模块不存在
+// export * from './private-chat'; // 模块不存在
 
 // 共享组件
 export * from './components';

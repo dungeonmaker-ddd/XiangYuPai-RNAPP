@@ -58,11 +58,9 @@ const GameBannerArea: React.FC<GameBannerAreaProps> = ({ onPress }) => {
       activeOpacity={0.9}
     >
       <View style={styles.bannerContainer}>
-        <ImageBackground
-          source={require('../../../../assets/images/home/banner/刺客信条4poster.png')}
-          style={styles.backgroundImage}
-          imageStyle={styles.imageStyle}
-        />
+        <View style={[styles.backgroundImage, styles.placeholderBanner]}>
+          <Text style={styles.bannerPlaceholder}>🎮 游戏横幅</Text>
+        </View>
       </View>
     </TouchableOpacity>
   );
@@ -93,6 +91,17 @@ const styles = StyleSheet.create({
   },
   imageStyle: {
     borderRadius: 12,
+  },
+  placeholderBanner: {
+    backgroundColor: '#f0f0f0',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 12,
+  },
+  bannerPlaceholder: {
+    fontSize: 16,
+    color: '#999',
+    textAlign: 'center',
   },
 });
 // #endregion

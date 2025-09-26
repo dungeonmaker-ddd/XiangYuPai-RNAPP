@@ -5,10 +5,10 @@
  */
 
 // 主页面导出
-export { default as GroupCenterMainPage } from './MainPage';
+export { GroupCenterScreen as GroupCenterMainPage } from './MainPage';
 
 // 子页面导出
-export { default as GroupCenterPublishPage } from './PublishPage';
+export { GroupPublishScreen as GroupCenterPublishPage } from './PublishPage';
 
 // 类型和常量导出
 export * from './types';

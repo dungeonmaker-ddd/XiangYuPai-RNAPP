@@ -5,7 +5,7 @@
  */
 
 // 主页面导出
-export { default as MessageMainPage } from './MainPage/index';
+export { MessageMainPage, MessageCenterScreen } from './MainPage';
 
 // 子页面导出
 export { default as MessageLikeCollectPage } from './LikeCollectPage';

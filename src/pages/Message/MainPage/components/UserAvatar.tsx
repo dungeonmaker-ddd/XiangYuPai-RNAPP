@@ -65,13 +65,3 @@ const styles = StyleSheet.create({
 });
 
 export default UserAvatar;
-
-    backgroundColor: STYLES.COLORS.LIGHT_GRAY
-  },
-  avatar: {
-    width: '100%',
-    height: '100%'
-  }
-});
-
-export default UserAvatar;

@@ -71,7 +71,7 @@ export const ContentCard: React.FC<ContentCardProps> = ({
   const { 
     formatCount, 
     truncateText, 
-    renderHighlightedText,
+    getHighlightedTextParts,
     getContentTypeIcon 
   } = utilsContentFormat();
 
@@ -124,10 +124,19 @@ export const ContentCard: React.FC<ContentCardProps> = ({
     <View style={styles.contentInfo}>
       {/* 内容描述 */}
       <View style={styles.descriptionContainer}>
-        {renderHighlightedText(
-          truncateText(item.description, 50), 
-          keyword
-        )}
+        <Text style={styles.descriptionText}>
+          {getHighlightedTextParts(truncateText(item.description, 50), keyword).map((part, index) => (
+            <Text
+              key={index}
+              style={[
+                styles.descriptionText,
+                part.highlighted && styles.highlightedText,
+              ]}
+            >
+              {part.text}
+            </Text>
+          ))}
+        </Text>
       </View>
       
       {/* 底部信息栏 */}
@@ -244,6 +253,16 @@ const styles = StyleSheet.create({
   },
   descriptionContainer: {
     marginBottom: SPACING.sm,
+  },
+  descriptionText: {
+    fontSize: FONTS.size.md,
+    color: COLORS.textPrimary,
+    lineHeight: FONTS.lineHeight.normal * FONTS.size.md,
+  },
+  highlightedText: {
+    color: COLORS.primary,
+    fontWeight: FONTS.weight.semiBold,
+    backgroundColor: COLORS.highlightBackground,
   },
   bottomInfo: {
     flexDirection: 'row',

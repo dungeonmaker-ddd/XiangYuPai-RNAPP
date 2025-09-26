@@ -4,4 +4,4 @@
  * 导出主页面组件
  */
 
-export { default as MainPage } from './index';
+export { default as MainPage } from './index.tsx';

@@ -77,10 +77,7 @@ const HeaderArea: React.FC<HeaderAreaProps> = ({
           style={styles.locationButton} 
           onPress={onLocationPress}
         >
-          <Image
-            source={require('../../../../assets/images/home/header/定位.png')}
-            style={styles.locationIcon}
-          />
+          <Text style={styles.locationIcon}>📍</Text>
           <Text style={styles.locationText}>{location.city}</Text>
         </TouchableOpacity>
 
@@ -90,10 +87,7 @@ const HeaderArea: React.FC<HeaderAreaProps> = ({
           onPress={onSearchPress}
           activeOpacity={0.8}
         >
-          <Image
-            source={require('../../../../assets/images/home/header/搜索icon.png')}
-            style={styles.searchIcon}
-          />
+          <Text style={styles.searchIcon}>🔍</Text>
           <Text style={styles.searchPlaceholder}>
             搜索词
           </Text>

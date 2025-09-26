@@ -18,8 +18,10 @@ import {
 } from 'react-native';
 import { User, MessageStatus } from '../types';
 import { STYLES } from '../constants';
-import { ChatHeader, MessageList, InputArea } from './components';
-import { ExtendedChatMessage, DynamicContent } from './components/MessageBubble';
+import ChatHeaderArea from './ChatHeaderArea';
+import MessageListArea from './MessageListArea';
+import InputArea from './InputArea';
+import { ExtendedChatMessage, DynamicContent } from './MessageBubbleArea';
 
 // ==================== Types ====================
 interface PrivateChatScreenProps {
@@ -194,7 +196,7 @@ const PrivateChatScreen: React.FC<PrivateChatScreenProps> = ({ navigation, route
       <StatusBar barStyle="dark-content" backgroundColor={STYLES.COLORS.WHITE} />
       
       {/* 对话导航栏 */}
-      <ChatHeader
+      <ChatHeaderArea
         userInfo={userInfo}
         onBack={() => navigation.goBack()}
       />
@@ -208,7 +210,7 @@ const PrivateChatScreen: React.FC<PrivateChatScreenProps> = ({ navigation, route
           {/* 消息列表区域 - 由MessageList子模块处理 */}
           <TouchableWithoutFeedback onPress={dismissKeyboard}>
             <View style={styles.messageContainer}>
-              <MessageList
+              <MessageListArea
                 userInfo={userInfo}
                 pendingMessage={pendingMessage}
                 onMessageSent={handleMessageSent}

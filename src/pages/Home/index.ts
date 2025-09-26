@@ -5,11 +5,11 @@
  */
 
 // 主页面导出
-export { default as HomeMainPage } from './MainPage';
+export { HomeScreen, HomeScreen as HomeMainPage } from './MainPage';
 
 // 子页面导出
-export { default as HomeLocationPage } from './LocationPage';
-export { default as HomeSearchPage } from './SearchPage';
+export { HomeLocationScreen, HomeLocationScreen as HomeLocationPage } from './LocationPage';
+export { SearchScreen, SearchScreen as HomeSearchPage } from './SearchPage';
 
 // 类型和常量导出
 export * from './types';

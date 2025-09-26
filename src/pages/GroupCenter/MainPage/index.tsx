@@ -53,8 +53,12 @@ import {
   GENDER_OPTIONS,
 } from './constants';
 
-// 导入组件
-import { GroupCard } from './components/GroupCard';
+// 导入组件（使用实际存在的组件）
+import HeaderArea from './HeaderArea';
+import ContentArea from './ContentArea';
+import FilterArea from './FilterArea';
+// 注释掉不存在的组件
+// import { GroupCard } from './components/GroupCard';
 // import { QuickFilters } from './components/QuickFilters';
 // import { FilterSystem } from './components/FilterSystem';
 
@@ -271,7 +275,8 @@ const GroupCenterScreen: React.FC<GroupCenterScreenProps> = ({ navigation }) => 
     setState(prev => ({ ...prev, selectedActivity: activity }));
     // 导航到详情页面
     // navigation?.navigate('GroupDetail', { activity });
-    console.log('打开活动详情:', activity.title);
+    // TODO: 导航到活动详情页面
+    // navigation.navigate('ActivityDetail', { activityId: activity.id });
   }, []);
 
   const handlePublishPress = useCallback(() => {
@@ -386,16 +391,12 @@ const GroupCenterScreen: React.FC<GroupCenterScreenProps> = ({ navigation }) => 
     </View>
   );
 
-  // 渲染活动卡片
+  // 渲染活动卡片 - 使用占位符组件
   const renderActivityCard = ({ item }: { item: GroupActivity }) => (
-    <GroupCard
-      activity={item}
-      onPress={handleActivityPress}
-      onAvatarPress={(user) => {
-        console.log('查看用户资料:', user.nickname);
-        // 可以导航到用户详情页面
-      }}
-    />
+    <View style={styles.groupCardPlaceholder}>
+      <Text style={styles.placeholderText}>组局卡片组件开发中...</Text>
+      <Text style={styles.placeholderSubtext}>{item.title}</Text>
+    </View>
   );
 
   // 主渲染
@@ -552,6 +553,27 @@ const styles = StyleSheet.create({
   emptyText: {
     fontSize: FONT_SIZE.MD,
     color: COLORS.TEXT_SECONDARY,
+  },
+  // 占位符样式
+  groupCardPlaceholder: {
+    padding: 16,
+    margin: 8,
+    backgroundColor: '#f5f5f5',
+    borderRadius: 8,
+    alignItems: 'center',
+    minHeight: 100,
+    justifyContent: 'center',
+  },
+  placeholderText: {
+    fontSize: 14,
+    color: '#999',
+    textAlign: 'center',
+  },
+  placeholderSubtext: {
+    fontSize: 12,
+    color: '#ccc',
+    textAlign: 'center',
+    marginTop: 4,
   },
 });
 

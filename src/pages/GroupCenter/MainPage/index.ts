@@ -4,7 +4,7 @@
  */
 
 // 主页面组件
-export { default as GroupCenterScreen } from './index';
+export { default as GroupCenterScreen } from './index.tsx';
 
 // 类型定义
 export * from './types';

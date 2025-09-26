@@ -22,10 +22,10 @@ import {
 // 内部模块导入
 import { COLORS } from '../constants';
 import type { TabType, ContentItem, UserInfo, ServiceInfo, TopicInfo } from '../types';
-import { AllResultsView } from './AllResultsView';
-import { UserResultsView } from './UserResultsView';
-import { ServiceResultsView } from './ServiceResultsView';
-import { TopicResultsView } from './TopicResultsView';
+import AllResultsView from './AllResultsView';
+import UserResultsView from './UserResultsView';
+import ServiceResultsView from './ServiceResultsView';
+import TopicResultsView from './TopicResultsView';
 import { processResultsData } from './processData';
 import { utilsResultsLayout } from './utilsLayout';
 // #endregion

@@ -5,6 +5,7 @@
 // 主页面组件
 export { default as HomeLocationScreen } from './HomeLocationScreen';
 export { default as LocationSelectorScreen } from './HomeLocationScreen'; // 兼容性导出
+export { default } from './HomeLocationScreen'; // 默认导出
 export type { HomeLocationScreenProps } from './types';
 
 // 状态管理导出

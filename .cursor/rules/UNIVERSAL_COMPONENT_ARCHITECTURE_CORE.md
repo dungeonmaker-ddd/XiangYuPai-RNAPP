@@ -12,11 +12,13 @@
 - ✅ **数据访问层强制使用MyBatis-Plus + QueryWrapper技术栈，所有查询优先使用QueryWrapper**
 - ✅ **ServiceImpl层使用QueryWrapper/LambdaQueryWrapper执行数据库查询，复杂查询可选择使用QueryBuilder封装**
 - ✅ **🎯 接口设计严格按需实现 - 只创建前端实际需要的接口，避免批量操作等过度设计**
+- ✅ **📦 逻辑集中化管理 - 优先在主组件文件内集中管理状态、事件处理、数据处理、简单工具函数等逻辑**
 - ❌ 严禁仅创建前端接口而忽略后端实现
 - ❌ 严禁交付不完整的后端交互层
 - ❌ **严禁在数据访问层使用非MyBatis-Plus的ORM框架**
 - ❌ **严禁在Mapper中编写复杂的自定义SQL，优先使用MyBatis-Plus提供的方法和QueryWrapper**
 - ❌ **🚫 严禁过度设计接口 - 禁止创建前端未明确需要的批量操作、复杂查询、管理员功能等接口**
+- ❌ **🚫 严禁过度文件拆分 - 避免为简单逻辑创建独立文件，包括简单的事件处理、数据处理、工具函数等**
 
 ### 🎯 强制执行规则
 
@@ -66,35 +68,35 @@ src/pages/                                          # 页面容器层
 │   │   │   │   ├── README.md                       # 组件文档
 │   │   │   │   │
 │   │   │   │   ├── {FunctionAreaName1}/            # 🔸 功能区域1 - 复杂的逻辑，嵌套实现
-│   │   │   │   │   ├── index.[ext]                 # 区域主文件
+│   │   │   │   │   ├── index.[ext]                 # 区域主文件 - 集中管理组件状态
 │   │   │   │   │   ├── types.[ext]                 # 区域类型定义 (可选)
 │   │   │   │   │   ├── constants.[ext]             # 区域常量 (可选)
-│   │   │   │   │   ├── use[LocalState].[ext]       # 区域本地状态
-│   │   │   │   │   ├── on[Action].[ext]            # 区域事件处理
-│   │   │   │   │   ├── api[Action].[ext]           # 区域API接口
-│   │   │   │   │   ├── process[Data].[ext]         # 数据处理
-│   │   │   │   │   └── utils[Function].[ext]       # 工具函数
+│   │   │   │   │   ├── use[LocalState].[ext]       # 区域本地状态 (仅复杂状态逻辑时创建)
+│   │   │   │   │   ├── on[Action].[ext]            # 区域事件处理 (仅复杂事件逻辑时创建)
+│   │   │   │   │   ├── api[Action].[ext]           # 区域API接口 (仅复杂API逻辑时创建)
+│   │   │   │   │   ├── process[Data].[ext]         # 数据处理 (仅复杂数据处理时创建)
+│   │   │   │   │   └── utils[Function].[ext]       # 工具函数 (仅复杂工具函数时创建)
 │   │   │   │   │
 │   │   │   │   ├── {FunctionAreaName2}/            # 🟢 功能区域2 - 扁平实现
 │   │   │   │   │   ├── index.[ext]                 # 区域主文件
 │   │   │   │   │   ├── constants.[ext]             # 区域常量
-│   │   │   │   │   ├── processData.[ext]           # 数据处理
-│   │   │   │   │   └── utilsDisplay.[ext]          # 显示工具
+│   │   │   │   │   ├── processData.[ext]           # 数据处理 (优先在主文件内处理)
+│   │   │   │   │   └── utilsDisplay.[ext]          # 显示工具 (优先在主文件内处理)
 │   │   │   │   │
 │   │   │   │   └── {FunctionAreaName3}/            # 🔸 功能区域3 - 复杂交互，嵌套实现
-│   │   │   │       ├── index.[ext]                 # 区域主文件
-│   │   │   │       ├── use[LocalState].[ext]       # 区域本地状态
-│   │   │   │       ├── on[Action].[ext]            # 区域事件处理
-│   │   │   │       ├── processLogic.[ext]          # 逻辑处理
-│   │   │   │       └── utilsHelper.[ext]           # 辅助工具
+│   │   │   │       ├── index.[ext]                 # 区域主文件 - 集中管理状态和逻辑
+│   │   │   │       ├── use[LocalState].[ext]       # 区域本地状态 (仅特别复杂时创建)
+│   │   │   │       ├── on[Action].[ext]            # 区域事件处理 (优先在主文件内处理)
+│   │   │   │       ├── processLogic.[ext]          # 逻辑处理 (优先在主文件内处理)
+│   │   │   │       └── utilsHelper.[ext]           # 辅助工具 (优先在主文件内处理)
 │   │   │   │
 │   │   │   ├── {ComponentAreaName2}/               # ✅ 组件区域2 - 主要内容区域
 │   │   │   └── {ComponentAreaName3}/               # ✅ 组件区域3 - 操作交互区域
 │   │   │
-│   │   ├── 🔄 页面组状态管理层 (统一管理)
-│   │   │   ├── use{PageGroup}.[ext]                # 页面组主状态管理
-│   │   │   ├── use{PageGroup}Data.[ext]            # 页面组数据状态管理
-│   │   │   └── use{PageGroup}Flow.[ext]            # 页面组流程状态管理
+│   │   ├── 🔄 页面组状态管理层 (按需管理 - 优先在主文件内管理)
+│   │   │   ├── use{PageGroup}.[ext]                # 页面组主状态管理 (仅复杂跨页面状态时创建)
+│   │   │   ├── use{PageGroup}Data.[ext]            # 页面组数据状态管理 (仅复杂数据逻辑时创建)
+│   │   │   └── use{PageGroup}Flow.[ext]            # 页面组流程状态管理 (仅复杂流程时创建)
 │   │   │
 │   │   └── 🧭 页面组导航层 (统一管理)
 │   │       ├── navigate{PageGroup}Flow.[ext]       # 页面组内导航流程
@@ -160,7 +162,7 @@ src/pages/                                          # 页面容器层
 - **📦 页面组**: 主功能模块，包含最多10个相关页面
 - **📱 主页面**: 页面组的主入口，负责集成和协调所有子组件
 - **📄 子页面**: `{SubFunction}Page/` 通用化命名，根据具体业务功能定义
-- **🔄 页面组状态管理**: 统一管理页面组级状态，子组件只管理简单本地状态
+- **🔄 页面组状态管理**: 优先在主文件内管理状态，避免过度抽象为hooks
 - **🧭 页面组导航**: 统一管理页面组级导航
 - **✅ ComponentAreaName**: 使用通用的组件区域命名，通过注释详细描述具体的布局功能和职责
 - **🔸🟢 FunctionAreaName**: 使用通用的功能区域命名，通过注释详细描述具体的业务功能、实现复杂度和技术细节
@@ -194,20 +196,20 @@ src/pages/                                          # 页面容器层
 || **子功能页面** | `{SubFunction}Page/` | `DetailPage/`, `FormPage/`, `EditPage/` | 通用化子功能页面命名 |
 || **通用示例** | `{SubFunction}Page/` | `ReportPage/`, `SharePage/`, `SettingsPage/` | 根据具体业务功能定义 |
 
-### 🔄 状态管理
-| 功能类型 | 命名格式 | 示例 |
-|---------|---------|------|
-| **页面组状态** | `use{PageGroup}.[ext]` | `useUserProfile.[ext]` |
-| **页面组数据** | `use{PageGroup}Data.[ext]` | `useUserProfileData.[ext]` |
-| **页面组流程** | `use{PageGroup}Flow.[ext]` | `useUserProfileFlow.[ext]` |
-| **子功能页状态** | `use{SubFunction}.[ext]` | `useDetail.[ext]`, `useForm.[ext]`, `useReport.[ext]` |
-| **本地状态** | `use[LocalState].[ext]` | `useToggle.[ext]` |
+### 🔄 状态管理 (优先在主文件内管理)
+| 功能类型 | 命名格式 | 示例 | 创建条件 |
+|---------|---------|------|----------|
+| **页面组状态** | `use{PageGroup}.[ext]` | `useUserProfile.[ext]` | 仅复杂跨页面状态时创建 |
+| **页面组数据** | `use{PageGroup}Data.[ext]` | `useUserProfileData.[ext]` | 仅复杂数据逻辑时创建 |
+| **页面组流程** | `use{PageGroup}Flow.[ext]` | `useUserProfileFlow.[ext]` | 仅复杂流程时创建 |
+| **子功能页状态** | `use{SubFunction}.[ext]` | `useDetail.[ext]`, `useForm.[ext]` | 仅特别复杂的状态逻辑时创建 |
+| **本地状态** | `use[LocalState].[ext]` | `useToggle.[ext]` | 避免创建，优先在主文件内管理 |
 
-### 🎯 事件处理
-| 事件类型 | 命名格式 | 示例 |
-|---------|---------|------|
-| **基础交互** | `on[Action].[ext]` | `onClick.[ext]` |
-| **复杂操作** | `on[UserAction].[ext]` | `onLongPress.[ext]` |
+### 🎯 事件处理 (优先在主文件内管理)
+| 事件类型 | 命名格式 | 示例 | 创建条件 |
+|---------|---------|------|----------|
+| **基础交互** | `on[Action].[ext]` | `onClick.[ext]` | 避免创建，优先在主文件内定义 |
+| **复杂操作** | `on[UserAction].[ext]` | `onLongPress.[ext]` | 仅特别复杂的事件逻辑时创建 |
 
 ### 🧭 导航处理
 | 导航类型 | 命名格式 | 示例 |
@@ -224,21 +226,21 @@ src/pages/                                          # 页面容器层
 | **子功能页API** | `api{PageGroup}[SubFunction].[ext]` | `apiUserProfileDetail.[ext]`, `apiUserProfileForm.[ext]` |
 | **聚合API** | `api{PageGroup}Aggregate.[ext]` | `apiUserProfileAggregate.[ext]` |
 
-### 🔄 数据处理 (简化前缀)
-| 处理类型 | 命名格式 | 示例 |
-|---------|---------|------|
-| **数据处理** | `processData.[ext]` | `processData.[ext]` |
-| **逻辑处理** | `processLogic.[ext]` | `processLogic.[ext]` |
-| **内容处理** | `processContent.[ext]` | `processContent.[ext]` |
-| **验证处理** | `processValidation.[ext]` | `processValidation.[ext]` |
+### 🔄 数据处理 (优先在主文件内管理)
+| 处理类型 | 命名格式 | 示例 | 创建条件 |
+|---------|---------|------|----------|
+| **数据处理** | `processData.[ext]` | `processData.[ext]` | 仅复杂数据处理逻辑时创建 |
+| **逻辑处理** | `processLogic.[ext]` | `processLogic.[ext]` | 仅复杂业务逻辑时创建 |
+| **内容处理** | `processContent.[ext]` | `processContent.[ext]` | 仅复杂内容处理时创建 |
+| **验证处理** | `processValidation.[ext]` | `processValidation.[ext]` | 仅复杂验证逻辑时创建 |
 
-### 🛠️ 工具函数 (简化前缀)
-| 工具类型 | 命名格式 | 示例 |
-|---------|---------|------|
-| **显示工具** | `utilsDisplay.[ext]` | `utilsDisplay.[ext]` |
-| **辅助工具** | `utilsHelper.[ext]` | `utilsHelper.[ext]` |
-| **动画工具** | `utilsAnimation.[ext]` | `utilsAnimation.[ext]` |
-| **格式化工具** | `utilsFormat.[ext]` | `utilsFormat.[ext]` |
+### 🛠️ 工具函数 (优先在主文件内管理)
+| 工具类型 | 命名格式 | 示例 | 创建条件 |
+|---------|---------|------|----------|
+| **显示工具** | `utilsDisplay.[ext]` | `utilsDisplay.[ext]` | 仅复杂显示逻辑时创建 |
+| **辅助工具** | `utilsHelper.[ext]` | `utilsHelper.[ext]` | 仅复杂辅助逻辑时创建 |
+| **动画工具** | `utilsAnimation.[ext]` | `utilsAnimation.[ext]` | 仅复杂动画逻辑时创建 |
+| **格式化工具** | `utilsFormat.[ext]` | `utilsFormat.[ext]` | 仅复杂格式化逻辑时创建 |
 
 ## 📝 八段式文件内代码编写规范
 
@@ -351,6 +353,7 @@ src/pages/                                          # 页面容器层
   - ✅ **Mapper接口继承BaseMapper<Entity>，利用MyBatis-Plus内置方法**
   - ✅ 错误处理和异常情况的前后端统一处理
   - ❌ **🚫 过度设计检查 - 确认未创建批量操作、管理员功能、复杂报表等前端未明确需要的接口**
+  - ❌ **🚫 过度文件拆分检查 - 确认未为简单逻辑创建不必要的独立文件，状态、事件、数据处理、工具函数优先集中在主文件内**
 
 ## 🎯 核心原则
 
@@ -363,14 +366,16 @@ src/pages/                                          # 页面容器层
 6. **🚨 前后端一体化强制原则** - API接口层与后端交互层必须同时完整实施，确保可用性
 7. **🔧 技术栈标准化原则** - 数据访问层统一使用MyBatis-Plus + QueryWrapper，通过QueryBuilder封装查询逻辑
 8. **🎯 按需设计原则** - 接口设计严格遵循YAGNI原则，只实现前端明确需要的功能，避免过度设计
+9. **📦 逻辑集中化原则** - 优先在主文件内管理状态、事件处理、数据处理、简单工具函数，减少文件碎片化
 
 ### 💻 实施原则  
-9. **架构完整 + 代码简洁** - 结构完整但实现简洁
-10. **强制执行** - Agent 严格按标准执行
-11. **渐进演化** - 支持从简单到复杂的演化
-12. **🚨 前后端同步交付** - 不得单独交付前端接口，必须确保后端实现可运行可测试
-13. **🔧 技术栈一致性** - 统一使用MyBatis-Plus + QueryWrapper + QueryBuilder模式，实现类型安全的查询封装
-14. **🎯 最小可用原则** - 每次实施只创建当前前端页面实际需要的接口，后续可按需扩展
+10. **架构完整 + 代码简洁** - 结构完整但实现简洁
+11. **强制执行** - Agent 严格按标准执行
+12. **渐进演化** - 支持从简单到复杂的演化
+13. **🚨 前后端同步交付** - 不得单独交付前端接口，必须确保后端实现可运行可测试
+14. **🔧 技术栈一致性** - 统一使用MyBatis-Plus + QueryWrapper + QueryBuilder模式，实现类型安全的查询封装
+15. **🎯 最小可用原则** - 每次实施只创建当前前端页面实际需要的接口，后续可按需扩展
+16. **📦 逻辑集中管理** - 避免过度文件拆分，优先在主文件内管理状态、事件、数据处理、简单工具函数等逻辑
 
 ---
 

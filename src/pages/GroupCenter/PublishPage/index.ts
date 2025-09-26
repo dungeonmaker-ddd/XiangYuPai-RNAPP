@@ -4,8 +4,8 @@
  */
 
 // 主页面组件
-export { default as GroupPublishScreen } from './index';
-export { default as PublishGroupScreen } from './PublishGroupScreen'; // 向后兼容
+export { default as PublishGroupScreen } from './PublishGroupScreen';
+export { default as GroupPublishScreen } from './PublishGroupScreen'; // 使用同一个组件
 
 // 组件区域导出
 export { HeaderArea } from './HeaderArea';

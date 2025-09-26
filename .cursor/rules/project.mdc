@@ -2,7 +2,7 @@
 alwaysApply: true
 ---
 ??? PATH ??
-????? 00000027 64C1:D356
+????? 00000072 64C1:D356
 C:\USERS\D\DOCUMENTS\GITHUB\XIANGYUPAI-RNAPP\SRC
 +---globalComponents
 +---navigation
@@ -84,8 +84,11 @@ C:\USERS\D\DOCUMENTS\GITHUB\XIANGYUPAI-RNAPP\SRC
 |   |       +---SearchHistoryArea
 |   |       +---SearchInputArea
 |   |       +---SearchResultsArea
-|   |       |   \---AllResultsView
-|   |       |       \---ContentCard
+|   |       |   +---AllResultsView
+|   |       |   |   \---ContentCard
+|   |       |   +---ServiceResultsView
+|   |       |   +---TopicResultsView
+|   |       |   \---UserResultsView
 |   |       +---SearchSuggestionsArea
 |   |       \---SearchTabsArea
 |   +---Main
@@ -135,7 +138,7 @@ C:\USERS\D\DOCUMENTS\GITHUB\XIANGYUPAI-RNAPP\SRC
 |               \---TypeCard
 \---types
 ??? PATH ??
-????? 0000000D 64C1:D356
+????? 0000001D 64C1:D356
 C:\USERS\D\DOCUMENTS\GITHUB\XIANGYUPAI-RNAPP\ASSETS
 +---action-icons
 +---icons

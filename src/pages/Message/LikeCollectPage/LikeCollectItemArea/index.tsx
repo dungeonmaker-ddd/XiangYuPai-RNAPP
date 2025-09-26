@@ -221,8 +221,3 @@ const styles = StyleSheet.create({
 
 // ==================== 8. Exports ====================
 export default LikeCollectItemArea;
-
-});
-
-// ==================== 8. Exports ====================
-export default LikeCollectItemArea;

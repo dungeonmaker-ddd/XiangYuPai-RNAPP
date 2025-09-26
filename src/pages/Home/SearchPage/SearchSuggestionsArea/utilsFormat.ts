@@ -3,8 +3,6 @@
  * 处理搜索建议格式化相关的工具函数
  */
 
-import React from 'react';
-import { Text, StyleSheet } from 'react-native';
 import { COLORS, FONTS } from '../constants';
 import type { SearchSuggestion } from '../types';
 
@@ -45,30 +43,14 @@ export const utilsSuggestionFormat = () => {
   };
 
   /**
-   * 渲染高亮文本
+   * 获取高亮文本部分
    */
-  const renderHighlightedText = (text: string, keyword: string) => {
+  const getHighlightedTextParts = (text: string, keyword: string) => {
     if (!keyword) {
-      return <Text style={suggestionTextStyle}>{text}</Text>;
+      return [{ text, highlighted: false }];
     }
 
-    const parts = highlightKeyword(text, keyword);
-    
-    return (
-      <Text style={suggestionTextStyle}>
-        {parts.map((part, index) => (
-          <Text
-            key={index}
-            style={[
-              suggestionTextStyle,
-              part.highlighted && suggestionTextHighlightStyle,
-            ]}
-          >
-            {part.text}
-          </Text>
-        ))}
-      </Text>
-    );
+    return highlightKeyword(text, keyword);
   };
 
   /**
@@ -85,7 +67,7 @@ export const utilsSuggestionFormat = () => {
   return {
     getSuggestionIcon,
     getSuggestionTypeText,
-    renderHighlightedText,
+    getHighlightedTextParts,
     truncateText,
   };
 };
@@ -108,15 +90,16 @@ const highlightKeyword = (text: string, keyword: string) => {
 };
 
 // 样式定义
-const suggestionTextStyle = {
-  flex: 1,
-  fontSize: FONTS.size.md,
-  color: COLORS.textPrimary,
-  marginRight: 12,
-};
-
-const suggestionTextHighlightStyle = {
-  color: COLORS.primary,
-  fontWeight: FONTS.weight.semiBold,
-  backgroundColor: COLORS.highlightBackground,
+export const suggestionTextStyles = {
+  normal: {
+    flex: 1,
+    fontSize: FONTS.size.md,
+    color: COLORS.textPrimary,
+    marginRight: 12,
+  },
+  highlighted: {
+    color: COLORS.primary,
+    fontWeight: FONTS.weight.semiBold,
+    backgroundColor: COLORS.highlightBackground,
+  },
 };

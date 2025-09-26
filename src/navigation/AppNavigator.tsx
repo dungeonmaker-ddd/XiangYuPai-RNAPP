@@ -8,13 +8,13 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 // 导入页面组件
 import { MainPage } from '../pages/Main';
-import { HomeLocationPage } from '../pages/Home';
-import { HomeSearchPage } from '../pages/Home';
-import { GroupCenterMainPage } from '../pages/GroupCenter';
-import { GroupCenterPublishPage } from '../pages/GroupCenter';
-import { PrivateChatScreen } from '../pages/Message/PrivateChatPage';
-import { DiscoverDetailPage } from '../pages/Discover/DetailPage';
-import { DiscoverReportPage } from '../pages/Discover';
+import { HomeLocationScreen } from '../pages/Home/LocationPage';
+import { SearchScreen } from '../pages/Home/SearchPage';
+import GroupCenterMainPage from '../pages/GroupCenter/MainPage/index.tsx';
+import GroupCenterPublishPage from '../pages/GroupCenter/PublishPage/index.tsx';
+import PrivateChatScreen from '../pages/Message/PrivateChatPage/PrivateChatScreen';
+import { DiscoverDetailPageForNavigation as DiscoverDetailPage } from '../pages/Discover/DetailPage/index.tsx';
+import DiscoverReportPage from '../pages/Discover/ReportPage/index.tsx';
 
 // 导入类型定义
 import type { RootStackParamList } from '../types/navigation';
@@ -42,7 +42,7 @@ const AppNavigator: React.FC = () => {
         {/* 地区选择页面 */}
         <Stack.Screen 
           name="LocationSelector" 
-          component={HomeLocationPage}
+          component={HomeLocationScreen}
           options={{
             headerShown: false,
             presentation: 'modal', // 模态展示
@@ -52,7 +52,7 @@ const AppNavigator: React.FC = () => {
         {/* 搜索页面 */}
         <Stack.Screen 
           name="Search" 
-          component={HomeSearchPage}
+          component={SearchScreen}
           options={{
             headerShown: false,
             animation: 'slide_from_right', // 从右侧滑入

@@ -76,18 +76,11 @@ const TeamPartyArea: React.FC<TeamPartyAreaProps> = ({ onPress, onMorePress }) =
         activeOpacity={0.9}
       >
         <View style={styles.bannerWrapper}>
-          <ImageBackground
-            source={require('../../../../assets/images/home/team-party/组局中心.png')}
-            style={styles.backgroundImage}
-            imageStyle={styles.imageStyle}
-          >
+          <View style={[styles.backgroundImage, styles.placeholderBanner]}>
             <View style={styles.titleContainer}>
-              <Image
-                source={require('../../../../assets/images/home/team-party/组局中心字幕.png')}
-                style={styles.titleImage}
-              />
+              <Text style={styles.titleText}>🎲 组局中心</Text>
             </View>
-          </ImageBackground>
+          </View>
         </View>
       </TouchableOpacity>
     </View>
@@ -144,6 +137,17 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     resizeMode: 'contain',
+  },
+  placeholderBanner: {
+    backgroundColor: '#4a90e2',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  titleText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#fff',
+    textAlign: 'center',
   },
 });
 // #endregion

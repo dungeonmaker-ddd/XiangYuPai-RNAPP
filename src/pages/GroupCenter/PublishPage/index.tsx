@@ -69,11 +69,14 @@ import {
   Z_INDEX,
 } from './constants';
 
-// 导入组件
-import ActivityTypeSelector from './components/ActivityTypeSelector';
-import PublishForm from './components/PublishForm';
-import AgreementSettings from './components/AgreementSettings';
-import PaymentModal from './components/PaymentModal';
+// 导入组件（使用实际存在的组件）
+import HeaderArea from './HeaderArea';
+import TypeSelectionArea from './TypeSelectionArea';
+// 注释掉不存在的组件
+// import ActivityTypeSelector from './components/ActivityTypeSelector';
+// import PublishForm from './components/PublishForm';
+// import AgreementSettings from './components/AgreementSettings';
+// import PaymentModal from './components/PaymentModal';
 
 // ══════════════════════════════════════════════════════════════
 // 2. Constants & Config (30-50行)
